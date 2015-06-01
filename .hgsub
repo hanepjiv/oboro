@@ -1,0 +1,6 @@
+tools/et-splint         = tools/et-splint
+tools/et-cpplint        = tools/et-cpplint
+
+[subpaths]
+https://hg.tradingpost.localnet/oboro/tools/et-splint         = https://hg.tradingpost.localnet/tools/et-splint
+https://hg.tradingpost.localnet/oboro/tools/et-cpplint        = https://hg.tradingpost.localnet/tools/et-cpplint

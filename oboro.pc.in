@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @OBORO_PACKAGE@
+Description:
+URL:
+Version: @OBORO_RELEASE@
+Requires:
+Requires.private:
+Conflicts:
+Cflags: -I${includedir}
+Libs: -L${libdir} @OBORO_THREAD_LIBS@
