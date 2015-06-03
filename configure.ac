@@ -44,6 +44,12 @@ LT_CONFIG_LTDL_DIR([libltdl])
 LT_INIT([static shared win32-dll dlopen])
 LTDL_INIT
 # ------------------------------------------------------------------------------
+# boost
+BOOST_VERSION=1.55.0
+AX_BOOST_BASE([$BOOST_VERSION],
+	[],
+	[AC_MSG_ERROR([Boost C++ libraries not found!])])
+# ------------------------------------------------------------------------------
 # lua
 AX_PROG_LUA(
 	[5.1], [5.4],
@@ -82,7 +88,6 @@ OBORO_C_CXX_FLAGS="\
 	"
 OBORO_CFLAGS="\
 	${OBORO_C_CXX_FLAGS} \
-	${PTHREAD_CFLAGS} \
 	-std=c99 \
 	-Wbad-function-cast -Wstrict-prototypes -Wold-style-definition \
 	-Wmissing-prototypes -Wnested-externs -Wdeclaration-after-statement \
@@ -93,8 +98,7 @@ OBORO_CXXFLAGS="\
 	-fvisibility-inlines-hidden -fthreadsafe-statics \
 	-Weffc++ -Woverloaded-virtual -Wsign-promo -Wsynth \
 	"
-OBORO_THREAD_LIBS=${PTHREAD_LIBS}
-OBORO_LDFLAGS=${OBORO_THREAD_LIBS}
+OBORO_LDFLAGS=
 # ==============================================================================
 # Checks for debug mode
 AC_MSG_CHECKING([for debug mode])
@@ -108,16 +112,18 @@ AC_ARG_ENABLE([debug],
 	[enable_debug=no])
 if test "x$enable_debug" = "xyes"; then
 	mydebugopt="\
-		-g -gstabs -pg \
-		-pedantic-errors \
+		-g -pg \
+		-Werror -pedantic-errors \
 		-Wall -Wextra -Wformat=2 -Wundef -Wshadow -Wpointer-arith \
 		-Wcast-qual -Wcast-align -Wwrite-strings \
 		-Wno-missing-field-initializers -Wno-sign-compare -Wpadded \
-		-Wconversion -Wfloat-equal \
-		-Wredundant-decls -Winline \
+		-Wconversion -Wfloat-equal -Wredundant-decls \
 		-Wno-unused-parameter -Wmissing-declarations -Wsign-compare \
 		-Wstrict-aliasing=1 \
 		"
+	if test "x${CC}" != "xclang" ; then
+	   mydebugopt="-gstabs ${mydebugopt}"
+	fi
 	OBORO_CPPFLAGS="\
 		${OBORO_CPPFLAGS} -DDEBUG -DOBORO_DEBUG \
 		"
@@ -157,7 +163,14 @@ AC_ARG_ENABLE([test],
 	[enable_test=no])
 if test "x$enable_test" = "xyes"; then
    AC_CHECK_PROG(SPLINT, [splint], [splint])
+   if test "x$SPLINT" != "xsplint"; then
+      AC_MSG_ERROR([Test feature requires a splint.])
+   fi
+
    AC_CHECK_PROG(PYTHON2, [python2], [python2])
+   if test "x$PYTHON2" != "xpython2"; then
+      AC_MSG_ERROR([Test feature requires a python2.])
+   fi
 fi
 AC_MSG_RESULT([$enable_test])
 AM_CONDITIONAL(TEST, test x$enable_test = xyes)
@@ -170,7 +183,6 @@ AC_SUBST(OBORO_VERSION_INFO)
 AC_SUBST(OBORO_CPPFLAGS)
 AC_SUBST(OBORO_CFLAGS)
 AC_SUBST(OBORO_CXXFLAGS)
-AC_SUBST(OBORO_THREAD_LIBS)
 AC_SUBST(OBORO_LDFLAGS)
 
 AC_CONFIG_FILES([

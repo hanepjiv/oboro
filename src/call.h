@@ -4,11 +4,11 @@
  *
  *  call.h
  *
- *  Copyright 2014 Kagumo SAKISAKA
+ *  Copyright 2015 hanepjiv
  *
- *  @author Kagumo SAKISAKA <kagumo@gmail.com>
- *  @since 2014/06/24
- *  @date 2015/05/29
+ *  @author hanepjiv <hanepjiv@gmail.com>
+ *  @since 2015/05/24
+ *  @date 2015/06/02
  */
 
 
@@ -16,7 +16,7 @@
 /*
   The MIT License (MIT)
 
-  Copyright (c) <2014> Kagumo SAKISAKA <kagumo@gmail.com>
+  Copyright (c) <2015> hanepjiv <hanepjiv@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal

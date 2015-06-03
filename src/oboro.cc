@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/25
- *  @date 2015/05/29
+ *  @date 2015/06/02
  */
 
 
@@ -16,7 +16,7 @@
 /*
   The MIT License (MIT)
 
-  Copyright (c) <2014> Kagumo SAKISAKA <kagumo@gmail.com>
+  Copyright (c) <2015> hanepjiv <hanepjiv@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -44,35 +44,7 @@
 #include <config.h>
 #endif  // HAVE_CONFIG_H
 
-#include <iostream>
-
-#include "./debug.h"
-
 
 namespace oboro {
-
-// =============================================================================
-OBORO_DECLSPEC void OBORO_CALL printStack(lua_State* L) {
-  std::cout << "=================================================" << std::endl;
-  int n = lua_gettop(L);
-  for (int i = n; i >= 1; --i) {
-    int t = lua_type(L, i);
-    std::cout << i << " / " << i - n - 1 << "\t" << lua_typename(L, t) << "\t";
-    switch (t) {
-      case LUA_TNIL:                                                    break;
-      case LUA_TBOOLEAN:       std::cout << lua_toboolean(L, i);        break;
-      case LUA_TLIGHTUSERDATA: std::cout << lua_touserdata(L, i);       break;
-      case LUA_TNUMBER:        std::cout << lua_tonumber(L, i);         break;
-      case LUA_TSTRING:        std::cout << lua_tostring(L, i);         break;
-      case LUA_TTABLE:                                                  break;
-      case LUA_TFUNCTION:                                               break;
-      case LUA_TUSERDATA:      std::cout << lua_touserdata(L, i);       break;
-      case LUA_TTHREAD:        std::cout << lua_tothread(L, i);         break;
-      default:                                                          break;
-    }
-    std::cout << std::endl;
-  }
-  std::cout << "-------------------------------------------------" << std::endl;
-}
 
 }  // namespace oboro

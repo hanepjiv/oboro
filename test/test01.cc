@@ -8,15 +8,15 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/05/28
+ *  @date 2015/06/04
  */
 
 
-/* ########################################################################## */
+// #############################################################################
 /*
   The MIT License (MIT)
 
-  Copyright (c) <2014> Kagumo SAKISAKA <kagumo@gmail.com>
+  Copyright (c) <2015> hanepjiv <hanepjiv@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -43,8 +43,164 @@
 #endif  // HAVE_CONFIG_H
 
 
+#include <oboro/oboro.hpp>
+#include <oboro/function.hpp>
+#include <oboro/module.hpp>
+
+
+// /////////////////////////////////////////////////////////////////////////////
+// =============================================================================
+#ifdef __cplusplus
+extern "C" {
+#endif  // __cplusplus
+
+  // ===========================================================================
+  static int c_func(lua_State* L);
+  int c_func(lua_State* L) {
+    int x = static_cast<int>(lua_tonumber(L, 1));
+    int y = static_cast<int>(lua_tonumber(L, 2));
+    lua_settop(L, 0);
+    lua_pushnumber(L, x + y);
+    return 1;
+  }
+  // ===========================================================================
+  static int c_index(lua_State* L);
+  int c_index(lua_State* L) {
+    std::printf("c_index\n");
+    oboro::printStack(L);
+    int** ppi = static_cast<int**>(lua_touserdata(L, 1));
+    const char* key = lua_tostring(L, 2);
+    lua_settop(L, 0);
+    if (0 == std::strcmp("test", key)) {
+      lua_pushnumber(L, **ppi);
+    } else {
+      lua_pushnil(L);
+    }
+    return 1;
+  }
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif  // __cplusplus
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 int main(int argc, char* argv[]) {
-  return 0;
+  lua_State* L = luaL_newstate();
+  luaL_openlibs(L);
+  {
+    int luatop = lua_gettop(L);
+    {
+      {
+        oboro::newtable(L, oboro::IdxTable { 1, -1, 1.0, -1.0, "test"});
+        OBORO_ASSERT(LUA_TTABLE == lua_type(L, -1), "");
+        lua_rawgeti(L, -1, 1);
+        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "");
+        OBORO_ASSERT(1 == static_cast<int>(lua_tonumber(L, -1)), "");
+        lua_settop(L, luatop);
+      }
+      {
+        oboro::IdxTable it { 1, -1, 1.0, -1.0, "test", oboro::NIL()};
+        oboro::newtable(L, it);
+        lua_pop(L, 1);
+      }
+      {
+        const oboro::IdxTable it { 1, -1, 1.0, -1.0, "test"};
+        oboro::newtable(L, it);
+        lua_pop(L, 1);
+      }
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  {
+    int luatop = lua_gettop(L);
+    {
+      {
+        oboro::newmetatable(L, "OBORO", oboro::KeyTable { {"_test", "TEST"} });
+        lua_pop(L, 1);
+      }
+      {
+        oboro::KeyTable kt { {"_test", "TEST"} };
+        oboro::newmetatable(L, "OBORO", kt);
+        lua_pop(L, 1);
+      }
+      {
+        const oboro::KeyTable kt { {"_test", "TEST"}, {"nil", oboro::NIL()} };
+        oboro::newmetatable(L, "OBORO", kt);
+        lua_pop(L, 1);
+      }
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  {
+    int luatop = lua_gettop(L);
+    {
+      oboro::newtable(L, oboro::IdxTable { 1, -1, 1.0, -1.0, "test" });
+      {
+        oboro::newmetatable(L, "OBORO", oboro::KeyTable {
+            {"_test", "TEST"},
+            {"_num", 10},
+            {"_cfunc",  &c_func}
+          });
+        lua_setmetatable(L, -2);
+
+        OBORO_ASSERT(LUA_TNIL != luaL_getmetafield(L, -1, "_num"), "");
+        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "");
+        OBORO_ASSERT(10 == static_cast<int>(lua_tonumber(L, -1)), "");
+        lua_pop(L, 1);
+      }
+      lua_pop(L, 1);
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  {
+    int luatop = lua_gettop(L);
+    {
+      oboro::Module("test1")
+          .end();
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  {
+    int luatop = lua_gettop(L);
+    {
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wpedantic"
+      lua_pushlightuserdata(L, reinterpret_cast<void*>(&c_func));
+# pragma GCC diagnostic pop
+      lua_pushcclosure(L, &oboro::oboroClosure, 1);
+      lua_pushnumber(L, 1);
+      lua_pushnumber(L, 2);
+      if (lua_pcall(L, 2, 1, 0)) {
+        std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
+        exit(EXIT_FAILURE);
+      }
+      oboro::printStack(L);
+      lua_pop(L, 1);
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  {
+    int luatop = lua_gettop(L);
+    {
+      int** ppi = static_cast<int**>(lua_newuserdata(L, sizeof(int*)));
+      int i = 12;
+      *ppi = &i;
+      {
+        luaL_newmetatable(L, "TEST05");
+        {
+          lua_pushstring(L, "__index");
+          lua_pushcfunction(L, c_index);
+          lua_rawset(L, -3);
+        }
+        lua_setmetatable(L, -2);
+      }
+      oboro::printStack(L);
+      lua_pushstring(L, "test");
+      lua_gettable(L, -2);
+      oboro::printStack(L);
+      lua_pop(L, 2);
+    }
+    OBORO_ASSERT(luatop == lua_gettop(L), "");
+  }
+  lua_close(L);
 }

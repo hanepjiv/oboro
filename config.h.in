@@ -24,6 +24,9 @@
 /* Define to 1 if you have the `argz_stringify' function. */
 #undef HAVE_ARGZ_STRINGIFY
 
+/* define if the Boost library is available */
+#undef HAVE_BOOST
+
 /* Define to 1 if you have the `closedir' function. */
 #undef HAVE_CLOSEDIR
 

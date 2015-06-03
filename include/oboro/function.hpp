@@ -1,18 +1,18 @@
 /** -*- coding:utf-8; -*-
- *  @file declspec.h
- *  @brief declspec.h
+ *  @file function.hpp
+ *  @brief function.hpp
  *
- *  declspec.h
+ *  function.hpp
  *
  *  Copyright 2015 hanepjiv
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
- *  @since 2015/05/24
- *  @date 2015/06/02
+ *  @since 2015/06/03
+ *  @date 2015/06/03
  */
 
 
-/* ########################################################################## */
+// #############################################################################
 /*
   The MIT License (MIT)
 
@@ -38,27 +38,49 @@
 */
 
 
-#ifndef OBORO_DECLSPEC_H_
-#define OBORO_DECLSPEC_H_
+#ifndef OBORO_FUNCTION_HPP_
+#define OBORO_FUNCTION_HPP_
 
 
-/* ########################################################################## */
-/* ========================================================================== */
-#if defined(__GNUC__)
-# if __GNUC__ >= 4
-#  define DECLSPEC_EXPORTS __attribute__ ((visibility("default")))
-#  define DECLSPEC_IMPORTS
-# elif __GNUC__ >= 2
-#  define DECLSPEC_EXPORTS __declspec(dllexport)
-#  define DECLSPEC_IMPORTS
-# endif
-#elif defined(_WINDOWS)
-#  define DECLSPEC_EXPORTS __declspec(dllexport)
-#  define DECLSPEC_IMPORTS __declspec(dllimport)
-#else
-# define DECLSPEC_EXPORTS
-# define DECLSPEC_IMPORTS
-#endif
+#include "./oboro.hpp"
 
 
-#endif  /* OBORO_DECLSPEC_H_ */
+namespace {
+
+
+
+}  // namespace
+
+namespace oboro {
+
+// /////////////////////////////////////////////////////////////////////////////
+// =============================================================================
+extern int oboroClosure(lua_State* L);
+
+}  // namespace oboro
+
+
+namespace oboro {
+
+// /////////////////////////////////////////////////////////////////////////////
+// =============================================================================
+int oboroClosure(lua_State* L) {
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wpedantic"
+  lua_CFunction f =
+      reinterpret_cast<lua_CFunction>(lua_touserdata(L, lua_upvalueindex(1)));
+# pragma GCC diagnostic pop
+  std::printf("%p\n", f);
+  return f(L);
+}
+
+}  // namespace oboro
+
+namespace {
+
+
+
+}  // namespace
+
+
+#endif  /* OBORO_FUNCTION_HPP_ */

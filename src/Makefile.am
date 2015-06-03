@@ -4,7 +4,9 @@ AM_CPPFLAGS=\
 	${LTDLINCL} \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/include
-AM_CFLAGS=${OBORO_CFLAGS}
+AM_CFLAGS=\
+	${OBORO_CFLAGS} \
+	${PTHREAD_CFLAGS}
 AM_CXXFLAGS=${OBORO_CXXFLAGS}
 AM_LDFLAGS=${OBORO_LDFLAGS} -L$(top_builddir)/src
 # //////////////////////////////////////////////////////////////////////////////
