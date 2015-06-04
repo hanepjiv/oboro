@@ -43,6 +43,17 @@ set(OBORO_SOURCES
   ${OBORO_ROOT_DIR}/src/oboro.cc
   )
 # ------------------------------------------------------------------------------
+add_library(oboro SHARED ${OBORO_SOURCES})
+target_link_libraries(oboro
+  )
+set_target_properties(oboro
+  PROPERTIES
+  OUTPUT_NAME oboro
+  VERSION ${OBORO_RELEASE}
+  SOVERSION ${OBORO_SOVERSION}
+  COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
+  )
+# ------------------------------------------------------------------------------
 add_library(oboro-static STATIC ${OBORO_SOURCES})
 target_link_libraries(oboro-static
   )
@@ -53,6 +64,7 @@ set_target_properties(oboro-static
   )
 # ------------------------------------------------------------------------------
 install(TARGETS
+  oboro
   oboro-static
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
