@@ -10,5 +10,5 @@ Version: @OBORO_RELEASE@
 Requires:
 Requires.private:
 Conflicts:
-Cflags: -I${includedir} @PTHREAD_CFLAGS@
-Libs: -L${libdir} @PTHREAD_LIBS@
+Cflags: -I${includedir} @OBORO_THREAD_CFLAGS@
+Libs: -L${libdir} @OBORO_THREAD_LIBS@

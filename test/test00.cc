@@ -89,20 +89,20 @@ int main(int argc, char* argv[]) {
   luaL_openlibs(L);
   {
     lua_register(L, "c_func", c_func);
-    if (luaL_loadstring(L,
-                        "function hello()\n"
-                        "    print([[hello]], c_func(1, 2))\n"
-                        "end\n")) {
-      std::fprintf(stderr, "ERROR!: luaL_loadstring");
+    if (luaL_dostring(L,
+                      "local _M = {}\n"
+                      "function _M.hello()\n"
+                      "    print([[hello]], c_func(1, 2))\n"
+                      "end\n"
+                      "return _M")) {
+      std::fprintf(stderr, "ERROR!: luaL_dostring");
       exit(EXIT_FAILURE);
     }
-    ::oboro::printStack(L);
-    if (lua_pcall(L, 0, 0, 0)) {
-      std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
-      exit(EXIT_FAILURE);
-    }
+    lua_setglobal(L, "Hello");
     {
-      lua_getglobal(L, "hello");
+      lua_getglobal(L, "Hello");
+      lua_pushstring(L, "hello");
+      lua_rawget(L, -2);
       if (lua_pcall(L, 0, 0, 0)) {
         std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
         exit(EXIT_FAILURE);

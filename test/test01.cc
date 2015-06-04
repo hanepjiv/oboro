@@ -42,7 +42,8 @@
 #include <config.h>
 #endif  // HAVE_CONFIG_H
 
-
+#undef OBORO_VERBOSITY
+#define OBORO_VERBOSITY OBORO_VERBOSITY_ALL
 #include <oboro/oboro.hpp>
 #include <oboro/function.hpp>
 #include <oboro/module.hpp>
@@ -88,15 +89,14 @@ int main(int argc, char* argv[]) {
   lua_State* L = luaL_newstate();
   luaL_openlibs(L);
   {
-    int luatop = lua_gettop(L);
-    {
+    { OBORO_TRACE("TEST00");
       {
         oboro::newtable(L, oboro::IdxTable { 1, -1, 1.0, -1.0, "test"});
-        OBORO_ASSERT(LUA_TTABLE == lua_type(L, -1), "");
+        OBORO_ASSERT(LUA_TTABLE == lua_type(L, -1), "ERROR!");
         lua_rawgeti(L, -1, 1);
-        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "");
-        OBORO_ASSERT(1 == static_cast<int>(lua_tonumber(L, -1)), "");
-        lua_settop(L, luatop);
+        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "ERROR!");
+        OBORO_ASSERT(1 == static_cast<int>(lua_tonumber(L, -1)), "ERROR!");
+        lua_settop(L, 0);
       }
       {
         oboro::IdxTable it { 1, -1, 1.0, -1.0, "test", oboro::NIL()};
@@ -104,18 +104,25 @@ int main(int argc, char* argv[]) {
         lua_pop(L, 1);
       }
       {
-        const oboro::IdxTable it { 1, -1, 1.0, -1.0, "test"};
+        const oboro::IdxTable it {
+          1, -1, 1.0, -1.0, "test", oboro::IdxTable{1, 2}
+        };
         oboro::newtable(L, it);
         lua_pop(L, 1);
       }
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  {
-    int luatop = lua_gettop(L);
+  { OBORO_TRACE("TEST01");
     {
       {
-        oboro::newmetatable(L, "OBORO", oboro::KeyTable { {"_test", "TEST"} });
+        oboro::newmetatable(L, "OBORO", oboro::KeyTable {
+            {"_test", "TEST"},
+            {"kt", oboro::KeyTable {
+                {"_test",       "TEST"},
+                {"_num",        10},
+                {"_cfunc",      &c_func}
+              }} });
         lua_pop(L, 1);
       }
       {
@@ -129,39 +136,40 @@ int main(int argc, char* argv[]) {
         lua_pop(L, 1);
       }
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  {
-    int luatop = lua_gettop(L);
+  { OBORO_TRACE("TEST02");
     {
       oboro::newtable(L, oboro::IdxTable { 1, -1, 1.0, -1.0, "test" });
       {
+        const oboro::KeyTable kt { {"_test", "TEST"}, {"nil", oboro::NIL()} };
         oboro::newmetatable(L, "OBORO", oboro::KeyTable {
-            {"_test", "TEST"},
-            {"_num", 10},
-            {"_cfunc",  &c_func}
+            {"_test",   "TEST"},
+            {"_num",    10},
+            {"_cfunc",  &c_func},
+            {"kt",      kt}
           });
         lua_setmetatable(L, -2);
 
-        OBORO_ASSERT(LUA_TNIL != luaL_getmetafield(L, -1, "_num"), "");
-        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "");
-        OBORO_ASSERT(10 == static_cast<int>(lua_tonumber(L, -1)), "");
+        OBORO_ASSERT(LUA_TNIL != luaL_getmetafield(L, -1, "_num"), "ERROR!");
+        OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "ERROR!");
+        OBORO_ASSERT(10 == static_cast<int>(lua_tonumber(L, -1)), "ERROR!");
         lua_pop(L, 1);
       }
       lua_pop(L, 1);
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  {
-    int luatop = lua_gettop(L);
+  { OBORO_TRACE("TEST03");
     {
-      oboro::Module("test1")
+      oboro::Module("test3", 1, 0, 0)
+          .def("test", 1)
+          .def("test", 1)
           .end();
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  {
-    int luatop = lua_gettop(L);
+  { OBORO_TRACE("TEST04");
     {
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wpedantic"
@@ -177,10 +185,9 @@ int main(int argc, char* argv[]) {
       oboro::printStack(L);
       lua_pop(L, 1);
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  {
-    int luatop = lua_gettop(L);
+  { OBORO_TRACE("TEST05");
     {
       int** ppi = static_cast<int**>(lua_newuserdata(L, sizeof(int*)));
       int i = 12;
@@ -200,7 +207,7 @@ int main(int argc, char* argv[]) {
       oboro::printStack(L);
       lua_pop(L, 2);
     }
-    OBORO_ASSERT(luatop == lua_gettop(L), "");
+    OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
   lua_close(L);
 }

@@ -647,6 +647,8 @@ OBORO_LDFLAGS
 OBORO_CXXFLAGS
 OBORO_CFLAGS
 OBORO_CPPFLAGS
+OBORO_THREAD_LIBS
+OBORO_THREAD_CFLAGS
 OBORO_VERSION_INFO
 OBORO_RELEASE
 OBORO_PACKAGE
@@ -19181,8 +19183,13 @@ fi
 OBORO_PACKAGE="${PACKAGE}"
 OBORO_RELEASE="0.0.0"
 OBORO_VERSION_INFO="0:0:0"
+
+OBORO_THREAD_CFLAGS=${PTHREAD_CFLAGS}
+OBORO_THREAD_LIBS=${PTHREAD_LIBS}
+
 OBORO_CPPFLAGS=
 OBORO_C_CXX_FLAGS="\
+	${OBORO_THREAD_CFLAGS} \
 	-pipe -fPIC -DPIC -D_REENTRANT -D_THREAD_SAFE \
 	-fno-asm -fno-builtin -fvisibility=hidden -fstrict-aliasing -pedantic \
 	-Werror -W -Wall -Wextra -Wstrict-aliasing=1 -Wformat=2 -Wundef \
@@ -19220,7 +19227,7 @@ else
 fi
 
 if test "x$enable_debug" = "xyes"; then
-	mydebugopt="\
+   	OBORO_C_CXXFLAGS="\
 		-g -pg \
 		-Werror -pedantic-errors \
 		-Wall -Wextra -Wformat=2 -Wundef -Wshadow -Wpointer-arith \
@@ -19231,31 +19238,27 @@ if test "x$enable_debug" = "xyes"; then
 		-Wstrict-aliasing=1 \
 		"
 	if test "x${CC}" != "xclang" ; then
-	   mydebugopt="-gstabs ${mydebugopt}"
+	   OBORO_C_CXXFLAGS="-gstabs ${OBORO_C_CXXFLAGS}"
 	fi
 	OBORO_CPPFLAGS="\
 		${OBORO_CPPFLAGS} -DDEBUG -DOBORO_DEBUG \
 		"
 	OBORO_CFLAGS="\
-		${OBORO_CFLAGS} ${mydebugopt} \
+		${OBORO_CFLAGS} ${OBORO_C_CXXFLAGS} \
 		-Wbad-function-cast -Wstrict-prototypes \
 		-Wold-style-definition -Wmissing-prototypes \
 		-Wnested-externs -Wdeclaration-after-statement \
 		"
 	OBORO_CXXFLAGS="\
-		${OBORO_CXXFLAGS} ${mydebugopt} \
+		${OBORO_CXXFLAGS} ${OBORO_C_CXXFLAGS} \
 		-Weffc++ -Woverloaded-virtual -Wsign-promo -Wsynth \
 		"
-	OBORO_LDFLAGS="\
-		-pg \
-		"
+	OBORO_LDFLAGS="-pg"
 else
-	myopt="\
-		-fomit-frame-pointer \
-		"
+	OBORO_C_CXXFLAGS="-fomit-frame-pointer"
 	OBORO_CPPFLAGS="${OBORO_CPPFLAGS} -DNDEBUG"
-	OBORO_CFLAGS="${OBORO_CFLAGS} ${myopt}"
-	OBORO_CXXFLAGS="${OBORO_CXXFLAGS} ${myopt}"
+	OBORO_CFLAGS="${OBORO_CFLAGS} ${OBORO_C_CXXFLAGS}"
+	OBORO_CXXFLAGS="${OBORO_CXXFLAGS} ${OBORO_C_CXXFLAGS}"
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_debug" >&5
 $as_echo "$enable_debug" >&6; }
@@ -19377,6 +19380,10 @@ fi
 
 # ==============================================================================
 # export
+
+
+
+
 
 
 

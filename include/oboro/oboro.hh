@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/06/02
+ *  @date 2015/06/04
  */
 
 
@@ -52,7 +52,7 @@ namespace oboro {
 
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
-//OBORO_DECLSPEC void OBORO_CALL printStack(lua_State* L);
+// OBORO_DECLSPEC void OBORO_CALL printStack(lua_State* L);
 
 }  // namespace oboro
 

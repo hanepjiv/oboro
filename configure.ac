@@ -76,8 +76,13 @@ AX_LUA_LIBS(
 OBORO_PACKAGE="${PACKAGE}"
 OBORO_RELEASE="indir([MAJOR]).indir([AGE]).indir([REVISION])"
 OBORO_VERSION_INFO="indir([CURRENT]):indir([REVISION]):indir([AGE])"
+
+OBORO_THREAD_CFLAGS=${PTHREAD_CFLAGS}
+OBORO_THREAD_LIBS=${PTHREAD_LIBS}
+
 OBORO_CPPFLAGS=
 OBORO_C_CXX_FLAGS="\
+	${OBORO_THREAD_CFLAGS} \
 	-pipe -fPIC -DPIC -D_REENTRANT -D_THREAD_SAFE \
 	-fno-asm -fno-builtin -fvisibility=hidden -fstrict-aliasing -pedantic \
 	-Werror -W -Wall -Wextra -Wstrict-aliasing=1 -Wformat=2 -Wundef \
@@ -111,7 +116,7 @@ AC_ARG_ENABLE([debug],
 	 esac],
 	[enable_debug=no])
 if test "x$enable_debug" = "xyes"; then
-	mydebugopt="\
+   	OBORO_C_CXXFLAGS="\
 		-g -pg \
 		-Werror -pedantic-errors \
 		-Wall -Wextra -Wformat=2 -Wundef -Wshadow -Wpointer-arith \
@@ -122,31 +127,27 @@ if test "x$enable_debug" = "xyes"; then
 		-Wstrict-aliasing=1 \
 		"
 	if test "x${CC}" != "xclang" ; then
-	   mydebugopt="-gstabs ${mydebugopt}"
+	   OBORO_C_CXXFLAGS="-gstabs ${OBORO_C_CXXFLAGS}"
 	fi
 	OBORO_CPPFLAGS="\
 		${OBORO_CPPFLAGS} -DDEBUG -DOBORO_DEBUG \
 		"
 	OBORO_CFLAGS="\
-		${OBORO_CFLAGS} ${mydebugopt} \
+		${OBORO_CFLAGS} ${OBORO_C_CXXFLAGS} \
 		-Wbad-function-cast -Wstrict-prototypes \
 		-Wold-style-definition -Wmissing-prototypes \
 		-Wnested-externs -Wdeclaration-after-statement \
 		"
 	OBORO_CXXFLAGS="\
-		${OBORO_CXXFLAGS} ${mydebugopt} \
+		${OBORO_CXXFLAGS} ${OBORO_C_CXXFLAGS} \
 		-Weffc++ -Woverloaded-virtual -Wsign-promo -Wsynth \
 		"
-	OBORO_LDFLAGS="\
-		-pg \
-		"
+	OBORO_LDFLAGS="-pg"
 else
-	myopt="\
-		-fomit-frame-pointer \
-		"
+	OBORO_C_CXXFLAGS="-fomit-frame-pointer"
 	OBORO_CPPFLAGS="${OBORO_CPPFLAGS} -DNDEBUG"
-	OBORO_CFLAGS="${OBORO_CFLAGS} ${myopt}"
-	OBORO_CXXFLAGS="${OBORO_CXXFLAGS} ${myopt}"
+	OBORO_CFLAGS="${OBORO_CFLAGS} ${OBORO_C_CXXFLAGS}"
+	OBORO_CXXFLAGS="${OBORO_CXXFLAGS} ${OBORO_C_CXXFLAGS}"
 fi
 AC_MSG_RESULT([$enable_debug])
 AM_CONDITIONAL(DEBUG, test x$enable_debug = xyes)
@@ -180,10 +181,14 @@ AC_SUBST(OBORO_PACKAGE)
 AC_SUBST(OBORO_RELEASE)
 AC_SUBST(OBORO_VERSION_INFO)
 
+AC_SUBST(OBORO_THREAD_CFLAGS)
+AC_SUBST(OBORO_THREAD_LIBS)
+
 AC_SUBST(OBORO_CPPFLAGS)
 AC_SUBST(OBORO_CFLAGS)
 AC_SUBST(OBORO_CXXFLAGS)
 AC_SUBST(OBORO_LDFLAGS)
+AC_SUBST(OBORO_THREAD_LIBS)
 
 AC_CONFIG_FILES([
 	oboro.pc
