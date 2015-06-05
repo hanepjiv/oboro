@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         lua_rawgeti(L, -1, 1);
         OBORO_ASSERT(LUA_TNUMBER == lua_type(L, -1), "ERROR!");
         OBORO_ASSERT(1 == static_cast<int>(lua_tonumber(L, -1)), "ERROR!");
-        lua_settop(L, 0);
+        lua_pop(L, 2);
       }
       {
         oboro::IdxTable it { 1, -1, 1.0, -1.0, "test", oboro::NIL()};
@@ -174,9 +174,7 @@ int main(int argc, char* argv[]) {
       {
         luaL_newmetatable(L, "TEST05");
         {
-          lua_pushstring(L, "__index");
-          lua_pushcfunction(L, c_index);
-          lua_rawset(L, -3);
+          oboro::rawset(L, -1, "__index", c_index);
         }
         lua_setmetatable(L, -2);
       }

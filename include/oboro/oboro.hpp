@@ -112,7 +112,7 @@ inline void     printStack(lua_State* L) noexcept {
       case LUA_TNUMBER:        std::printf("%+lf", lua_tonumber(L, i));   break;
       case LUA_TSTRING:        std::printf("[[%s]]", lua_tostring(L, i)); break;
       case LUA_TTABLE:         std::printf("%p", lua_topointer(L, i));    break;
-      case LUA_TFUNCTION: {
+      case LUA_TFUNCTION:
         if (lua_iscfunction(L, i)) {
           std::printf("C Function   : %p", lua_tocfunction(L, i));
         } else {
@@ -259,30 +259,22 @@ inline void     rawsets(lua_State* L, int a_idx, IdxTable const & a_Table) {
   if (0 == s) { return; }
 
   for (size_t i = 0; i < s; ++i) {
-    using boost::any_cast;
     const boost::any& v = a_Table[i];
-    const int j = static_cast<int>(i) + 1;
     if        (false) {
-    } else if (v.type() == typeid(NIL)) {
-      rawseti(L, a_idx, j, any_cast<NIL>(v));
-    } else if (v.type() == typeid(bool)) {
-      rawseti(L, a_idx, j, any_cast<bool>(v));
-    } else if (v.type() == typeid(void*)) {
-      rawseti(L, a_idx, j, any_cast<void*>(v));
-    } else if (v.type() == typeid(lua_Number)) {
-      rawseti(L, a_idx, j, any_cast<lua_Number>(v));
-    } else if (v.type() == typeid(lua_Integer)) {
-      rawseti(L, a_idx, j, any_cast<lua_Integer>(v));
-    } else if (v.type() == typeid(char*)) {
-      rawseti(L, a_idx, j, any_cast<char*>(v));
-    } else if (v.type() == typeid(const char*)) {
-      rawseti(L, a_idx, j, any_cast<const char*>(v));
-    } else if (v.type() == typeid(lua_CFunction)) {
-      rawseti(L, a_idx, j, any_cast<lua_CFunction>(v));
-    } else if (v.type() == typeid(IdxTable const &)) {
-      rawseti(L, a_idx, j, any_cast<IdxTable const &>(v));
-    } else if (v.type() == typeid(KeyTable const &)) {
-      rawseti(L, a_idx, j, any_cast<KeyTable const &>(v));
+#define _OBORO_RAWSETS_ENTRY(TYPE)                                      \
+      } else if (v.type() == typeid(TYPE)) {                            \
+          rawseti(L, a_idx, static_cast<int>(i) + 1, boost::any_cast<TYPE>(v))
+      _OBORO_RAWSETS_ENTRY(NIL);
+      _OBORO_RAWSETS_ENTRY(bool);
+      _OBORO_RAWSETS_ENTRY(void*);
+      _OBORO_RAWSETS_ENTRY(lua_Number);
+      _OBORO_RAWSETS_ENTRY(lua_Integer);
+      _OBORO_RAWSETS_ENTRY(char*);
+      _OBORO_RAWSETS_ENTRY(const char*);
+      _OBORO_RAWSETS_ENTRY(lua_CFunction);
+      _OBORO_RAWSETS_ENTRY(IdxTable const &);
+      _OBORO_RAWSETS_ENTRY(KeyTable const &);
+#undef _OBORO_RAWSETS_ENTRY
     } else {
       throw std::invalid_argument((boost::format(
           "ERROR!: oboro::rawsets<const IdxTable&>: unknown type %1%.") %
@@ -312,31 +304,22 @@ inline void     rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
   if (0 == a_Table.size()) { return; }
 
   for (const KeyVal& v : a_Table) {
-    using std::get;
-    using boost::any_cast;
     if        (false) {
-    } else if (get<1>(v).type() == typeid(NIL)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<NIL>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(bool)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<bool>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(void*)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<void*>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(lua_Number)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<lua_Number>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(lua_Integer)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<lua_Integer>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(char*)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<char*>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(const char*)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<const char*>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(lua_CFunction)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<lua_CFunction>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(IdxTable const &)) {
-      rawset(L, a_idx,
-             get<0>(v).c_str(), any_cast<IdxTable const &>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(KeyTable const &)) {
-      rawset(L, a_idx,
-             get<0>(v).c_str(), any_cast<KeyTable const &>(get<1>(v)));
+#define _OBORO_RAWSETS_ENTRY(TYPE)                              \
+      } else if (std::get<1>(v).type() == typeid(TYPE)) {       \
+          rawset(L, a_idx, std::get<0>(v).c_str(),              \
+                 boost::any_cast<TYPE>(std::get<1>(v)))
+      _OBORO_RAWSETS_ENTRY(NIL);
+      _OBORO_RAWSETS_ENTRY(bool);
+      _OBORO_RAWSETS_ENTRY(void*);
+      _OBORO_RAWSETS_ENTRY(lua_Number);
+      _OBORO_RAWSETS_ENTRY(lua_Integer);
+      _OBORO_RAWSETS_ENTRY(char*);
+      _OBORO_RAWSETS_ENTRY(const char*);
+      _OBORO_RAWSETS_ENTRY(lua_CFunction);
+      _OBORO_RAWSETS_ENTRY(IdxTable const &);
+      _OBORO_RAWSETS_ENTRY(KeyTable const &);
+#undef _OBORO_RAWSETS_ENTRY
     } else {
       throw std::invalid_argument((boost::format(
           "ERROR!: oboro::rawsets<const KeyTable&>: unknown type %1%.") %
