@@ -119,7 +119,6 @@ inline void     printStack(lua_State* L) noexcept {
           std::printf("Lua Function : %p", lua_topointer(L, i));
         }
         break;
-      }
       case LUA_TUSERDATA:      std::printf("%p", lua_touserdata(L, i));   break;
       case LUA_TTHREAD:        std::printf("%p", lua_tothread(L, i));     break;
       default:                                                            break;
