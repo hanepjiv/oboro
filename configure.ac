@@ -116,7 +116,7 @@ AC_ARG_ENABLE([debug],
 	 esac],
 	[enable_debug=no])
 if test "x$enable_debug" = "xyes"; then
-   	OBORO_C_CXXFLAGS="\
+	OBORO_C_CXXFLAGS="\
 		-g -pg \
 		-Werror -pedantic-errors \
 		-Wall -Wextra -Wformat=2 -Wundef -Wshadow -Wpointer-arith \
@@ -192,6 +192,7 @@ AC_SUBST(OBORO_THREAD_LIBS)
 
 AC_CONFIG_FILES([
 	oboro.pc
+	Doxyfile
 	Makefile
 	include/Makefile
 	src/Makefile

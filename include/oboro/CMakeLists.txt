@@ -26,7 +26,7 @@
 
 # ==============================================================================
 # oboro ------------------------------------------------------------------------
-set(OBORO_INCLUDE_OBORO_SRC "${OBORO_ROOT_DIR}/include/oboro")
+set(OBORO_INCLUDE_OBORO_SRC "${abs_top_srcdir}/include/oboro")
 set(OBORO_INCLUDE_OBORO_DEST "include/oboro")
 # ------------------------------------------------------------------------------
 set(oboro_HEADERS
@@ -63,7 +63,7 @@ if(OBORO_ENABLE_TEST)
   endif()
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${OBORO_ROOT_DIR}/include/oboro")
+  list(APPEND TEST_ENV_ "SRCDIR=${abs_top_srcdir}/include/oboro")
   list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_SRC_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")

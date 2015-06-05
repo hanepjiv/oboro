@@ -42,15 +42,15 @@ if(OBORO_ENABLE_TEST)
   endif()
   # ----------------------------------------------------------------------------
   set(test00_SRCS
-    ${OBORO_ROOT_DIR}/include/oboro/debug.h
+    ${abs_top_srcdir}/include/oboro/debug.h
 
-    ${OBORO_ROOT_DIR}/include/oboro/oboro.hpp
-    ${OBORO_ROOT_DIR}/include/oboro/module.hpp
-    ${OBORO_ROOT_DIR}/include/oboro/function.hpp
+    ${abs_top_srcdir}/include/oboro/oboro.hpp
+    ${abs_top_srcdir}/include/oboro/module.hpp
+    ${abs_top_srcdir}/include/oboro/function.hpp
 
-    ${OBORO_ROOT_DIR}/include/oboro/oboro.hh
+    ${abs_top_srcdir}/include/oboro/oboro.hh
 
-    ${OBORO_ROOT_DIR}/test/test00.cc
+    ${abs_top_srcdir}/test/test00.cc
     )
   add_executable(test00 ${test00_SRCS})
   target_link_libraries(test00 ${OBORO_LIBRARIES})
@@ -62,15 +62,15 @@ if(OBORO_ENABLE_TEST)
   list(APPEND OBORO_TEST_TEST_EXE test00)
   # ----------------------------------------------------------------------------
   set(test01_SRCS
-    ${OBORO_ROOT_DIR}/include/oboro/debug.h
+    ${abs_top_srcdir}/include/oboro/debug.h
 
-    ${OBORO_ROOT_DIR}/include/oboro/oboro.hpp
-    ${OBORO_ROOT_DIR}/include/oboro/module.hpp
-    ${OBORO_ROOT_DIR}/include/oboro/function.hpp
+    ${abs_top_srcdir}/include/oboro/oboro.hpp
+    ${abs_top_srcdir}/include/oboro/module.hpp
+    ${abs_top_srcdir}/include/oboro/function.hpp
 
-    ${OBORO_ROOT_DIR}/include/oboro/oboro.hh
+    ${abs_top_srcdir}/include/oboro/oboro.hh
 
-    ${OBORO_ROOT_DIR}/test/test01.cc
+    ${abs_top_srcdir}/test/test01.cc
     )
   add_executable(test01 ${test01_SRCS})
   target_link_libraries(test01 ${OBORO_LIBRARIES} ${OBORO_THREAD_LIBS})
@@ -82,7 +82,7 @@ if(OBORO_ENABLE_TEST)
   list(APPEND OBORO_TEST_TEST_EXE test01)
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  set(TEST_ENV_ "${TEST_ENV_};SRCDIR=${OBORO_ROOT_DIR}/test")
+  set(TEST_ENV_ "${TEST_ENV_};SRCDIR=${abs_top_srcdir}/test")
   set(TEST_ENV_ "${TEST_ENV_};BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_TEST_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")

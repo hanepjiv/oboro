@@ -68,7 +68,7 @@ endif()
 # ##############################################################################
 # root  ========================================================================
 # ------------------------------------------------------------------------------
-set(OBORO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(abs_top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
 # ##############################################################################
 # programs =====================================================================
 # ------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ set(includedir "\${prefix}/include")
 # ------------------------------------------------------------------------------
 set(OBORO_INCLUDE_DIRS "")
 list(APPEND OBORO_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND OBORO_INCLUDE_DIRS ${OBORO_ROOT_DIR}/include)
+list(APPEND OBORO_INCLUDE_DIRS ${abs_top_srcdir}/include)
 list(APPEND OBORO_INCLUDE_DIRS ${LUA_INCLUDE_DIR})
 list(APPEND OBORO_INCLUDE_DIRS ${Boost_INCLUDE_DIR})
 list(APPEND OBORO_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
@@ -124,9 +124,9 @@ list(REMOVE_ITEM OBORO_LIBRARIES "")
 # ##############################################################################
 # extra ========================================================================
 # ------------------------------------------------------------------------------
-configure_file(${OBORO_ROOT_DIR}/config.h.in config.h @ONLY)
-configure_file(${OBORO_ROOT_DIR}/oboro.pc.in oboro.pc @ONLY)
-configure_file(${OBORO_ROOT_DIR}/Doxyfile.in Doxyfile @ONLY)
+configure_file(${abs_top_srcdir}/config.h.in config.h @ONLY)
+configure_file(${abs_top_srcdir}/oboro.pc.in oboro.pc @ONLY)
+configure_file(${abs_top_srcdir}/Doxyfile.in Doxyfile @ONLY)
 # ##############################################################################
 # for uninstall ================================================================
 # ------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ if(OBORO_ENABLE_TEST)
     message(FATAL_ERROR "Test feature requires splint.")
   endif()
   message(STATUS "${SPLINT}")
-  configure_file(${OBORO_ROOT_DIR}/tools/et-splint/splint.sh.in
+  configure_file(${abs_top_srcdir}/tools/et-splint/splint.sh.in
     tools/et-splint/splint.sh @ONLY)
   set(SPLINT_FLAGS "")
   set(SPLINT_FLAGS "${SPLINT_FLAGS} -DOBORO_EXPORTS")
@@ -172,9 +172,9 @@ if(OBORO_ENABLE_TEST)
     message(FATAL_ERROR "Test feature requires python2.")
   endif()
   message(STATUS "${PYTHON2}")
-  configure_file(${OBORO_ROOT_DIR}/tools/et-cpplint/cpplint.sh.in
+  configure_file(${abs_top_srcdir}/tools/et-cpplint/cpplint.sh.in
     tools/et-cpplint/cpplint.sh @ONLY)
-  set(CPPLINT "python2 ${OBORO_ROOT_DIR}/tools/et-cpplint/cpplint.py"
+  set(CPPLINT "python2 ${abs_top_srcdir}/tools/et-cpplint/cpplint.py"
    )
   set(CPPLINT_FLAGS "")
   set(CPPLINT_SH /bin/env sh ${CMAKE_CURRENT_BINARY_DIR}/tools/et-cpplint/cpplint.sh
@@ -187,7 +187,7 @@ if(OBORO_ENABLE_TEST)
   # environment  ---------------------------------------------------------------
   set(TEST_ENV "")
   list(APPEND TEST_ENV "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}")
-  list(APPEND TEST_ENV "TOP_SRCDIR=${OBORO_ROOT_DIR}")
+  list(APPEND TEST_ENV "TOP_SRCDIR=${abs_top_srcdir}")
   list(APPEND TEST_ENV "TOP_BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   list(APPEND TEST_ENV "SPLINT=${SPLINT} ${SPLINT_FLAGS} -DOBORO_EXPORTS")
   list(APPEND TEST_ENV "CPPLINT=${CPPLINT} ${CPPLINT_FLAGS}")

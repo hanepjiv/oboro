@@ -28,19 +28,19 @@ link_directories(${OBORO_LIBRARY_DIRS})
 # ==============================================================================
 # oboro ------------------------------------------------------------------------
 set(OBORO_SOURCES
-  ${OBORO_ROOT_DIR}/include/oboro/call.h
-  ${OBORO_ROOT_DIR}/include/oboro/declspec.h
-  ${OBORO_ROOT_DIR}/include/oboro/begin.h
+  ${abs_top_srcdir}/include/oboro/call.h
+  ${abs_top_srcdir}/include/oboro/declspec.h
+  ${abs_top_srcdir}/include/oboro/begin.h
 
-  ${OBORO_ROOT_DIR}/include/oboro/debug.h
+  ${abs_top_srcdir}/include/oboro/debug.h
 
-  ${OBORO_ROOT_DIR}/include/oboro/oboro.hpp
-  ${OBORO_ROOT_DIR}/include/oboro/module.hpp
-  ${OBORO_ROOT_DIR}/include/oboro/function.hpp
+  ${abs_top_srcdir}/include/oboro/oboro.hpp
+  ${abs_top_srcdir}/include/oboro/module.hpp
+  ${abs_top_srcdir}/include/oboro/function.hpp
 
-  ${OBORO_ROOT_DIR}/include/oboro/oboro.hh
+  ${abs_top_srcdir}/include/oboro/oboro.hh
 
-  ${OBORO_ROOT_DIR}/src/oboro.cc
+  ${abs_top_srcdir}/src/oboro.cc
   )
 # ------------------------------------------------------------------------------
 add_library(oboro SHARED ${OBORO_SOURCES})
@@ -87,7 +87,7 @@ if(OBORO_ENABLE_TEST)
   endif()
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${OBORO_ROOT_DIR}/src")
+  list(APPEND TEST_ENV_ "SRCDIR=${abs_top_srcdir}/src")
   list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_SRC_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")
