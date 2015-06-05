@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/06/04
+ *  @date 2015/06/05
  */
 
 
@@ -58,24 +58,45 @@
 
 
 namespace oboro {
-
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 typedef struct NIL_ NIL;
-struct NIL_ {};
+struct NIL_     {};
 // -----------------------------------------------------------------------------
-using IdxTable = std::vector<boost::any>;
+using IdxTable  = std::vector<boost::any>;
 // -----------------------------------------------------------------------------
-using KeyVal = std::pair<std::string, boost::any>;
-using KeyTable = std::vector<KeyVal>;
+using KeyVal    = std::pair<std::string, boost::any>;
+using KeyTable  = std::vector<KeyVal>;
+// =============================================================================
+inline void     printStack(lua_State* L) noexcept;
 // -----------------------------------------------------------------------------
-using Closure = std::pair<lua_CFunction, int>;
+template <typename T>
+inline void     push(lua_State* L, T a_val);
+// -----------------------------------------------------------------------------
+template <typename T>
+inline void     rawseti(lua_State* L, int a_idx, int a_i, T&& a_val);
+// -----------------------------------------------------------------------------
+template <typename T>
+inline void     rawset(lua_State* L,
+                       int a_idx, const char* a_key, T&& a_val);
+// -----------------------------------------------------------------------------
+template <typename T>
+inline void     rawsets(lua_State*, int, T &&);
+// -----------------------------------------------------------------------------
+template <typename T>
+inline void     createtable(lua_State*, int) noexcept;
+// -----------------------------------------------------------------------------
+template <typename T>
+inline int      newtable(lua_State*, T &&);
+// -----------------------------------------------------------------------------
+template <typename T>
+inline int      newmetatable(lua_State*, const std::string&, T &&);
+}  // namespace oboro
+
+namespace oboro {
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
-template <typename T> inline int newtable(lua_State*, T &&);
-// /////////////////////////////////////////////////////////////////////////////
-// =============================================================================
-inline void printStack(lua_State* L) noexcept {
+inline void     printStack(lua_State* L) noexcept {
   OBORO_TRACE_DEBUG("oboro::printStack");
   std::printf("// ========================================================= \n"
               "// Lua Stack  ----------------------------------------------\n");
@@ -107,71 +128,79 @@ inline void printStack(lua_State* L) noexcept {
   }
 }
 // =============================================================================
-template <typename T> inline void push(lua_State* L, T a_val) noexcept;
-// -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, NIL) noexcept {
+template <>
+inline void     push(lua_State* L, NIL /* a_nil */) {
   OBORO_TRACE_DEBUG("oboro::push<NIL>");
   OBORO_ASSERT(L, "ERROR! oboro::push<NIL>: invalid lua_State");
   lua_pushnil(L);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, bool a_val) noexcept {
+template <>
+inline void     push(lua_State* L, bool a_val) {
   OBORO_TRACE_DEBUG("oboro::push<bool>");
   OBORO_ASSERT(L, "ERROR! oboro::push<bool>: invalid lua_State");
   lua_pushboolean(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, void* a_val) noexcept {
+template <>
+inline void     push(lua_State* L, void* a_val) {
   OBORO_TRACE_DEBUG("oboro::push<void*>");
   OBORO_ASSERT(L, "ERROR! oboro::push<void*>: invalid lua_State");
   lua_pushlightuserdata(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, lua_Number a_val) noexcept {
+template <>
+inline void     push(lua_State* L, lua_Number a_val) {
   OBORO_TRACE_DEBUG("oboro::push<lua_Number>");
   OBORO_ASSERT(L, "ERROR! oboro::push<lua_Number>: invalid lua_State");
   lua_pushnumber(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, lua_Integer a_val) noexcept {
+template <>
+inline void     push(lua_State* L, lua_Integer a_val) {
   OBORO_TRACE_DEBUG("oboro::push<lua_Integer>");
   OBORO_ASSERT(L, "ERROR! oboro::push<lua_Integer>: invalid lua_State");
   lua_pushinteger(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, const char* a_val) noexcept {
+template <>
+inline void     push(lua_State* L, const char* a_val) {
   OBORO_TRACE_DEBUG("oboro::push<const char*>");
   OBORO_ASSERT(L, "ERROR! oboro::push<const char*>: invalid lua_State");
   lua_pushstring(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, char* a_val) noexcept {
+template <>
+inline void     push(lua_State* L, char* a_val) {
   OBORO_TRACE_DEBUG("oboro::push<char*>");
   OBORO_ASSERT(L, "ERROR! oboro::push<const char*>: invalid lua_State");
   lua_pushstring(L, a_val);
 }
 // -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, std::string const & a_val) noexcept {
-  OBORO_TRACE_DEBUG("oboro::push<std::string const &>");
-  OBORO_ASSERT(L, "ERROR! oboro::push<std::string const &>: invalid lua_State");
-  lua_pushstring(L, a_val.c_str());
-}
-// -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, const Closure a_val) noexcept {
-  OBORO_TRACE_DEBUG("oboro::push<Closure>");
-  OBORO_ASSERT(L, "ERROR! oboro::push<Closure>: invalid lua_State");
-  lua_pushcclosure(L, std::get<0>(a_val), std::get<1>(a_val));
-}
-// -----------------------------------------------------------------------------
-template <> inline void push(lua_State* L, const lua_CFunction a_val) noexcept {
+template <>
+inline void     push(lua_State* L, lua_CFunction a_val) {
   OBORO_TRACE_DEBUG("oboro::push<lua_CFunction>");
   OBORO_ASSERT(L, "ERROR! oboro::push<lua_CFunction>: invalid lua_State");
   lua_pushcfunction(L, a_val);
 }
+// -----------------------------------------------------------------------------
+template <>
+inline void     push(lua_State* L, IdxTable const & a_val) {
+  OBORO_TRACE_DEBUG("oboro::push<IdxTable>");
+  OBORO_ASSERT(L, "ERROR! oboro::push<IdxTable>: invalid lua_State");
+  newtable(L, a_val);
+}
+// -----------------------------------------------------------------------------
+template <>
+inline void     push(lua_State* L, KeyTable const & a_val) {
+  OBORO_TRACE_DEBUG("oboro::push<KeyTable>");
+  OBORO_ASSERT(L, "ERROR! oboro::push<KeyTable>: invalid lua_State");
+  newtable(L, a_val);
+}
 // =============================================================================
 template <typename T>
-inline void rawseti(lua_State* L,
-                    int a_idx, int a_i, T&& a_val) noexcept {
+inline void     rawseti(lua_State* L,
+                        int a_idx, int a_i, T&& a_val) {
   OBORO_TRACE_DEBUG("oboro::rawseti<T>");
   OBORO_ASSERT(L, "ERROR! oboro::rawseti: invalid lua_State");
   OBORO_ASSERT(0 != a_idx, "ERROR! oboro::rawseti: invalid index");
@@ -180,22 +209,22 @@ inline void rawseti(lua_State* L,
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawseti(lua_State* L,
-                    int a_idx, int a_i, IdxTable const &a_val) noexcept {
+inline void     rawseti(lua_State* L,
+                        int a_idx, int a_i, IdxTable const &a_val) {
   newtable(L, a_val);
   lua_rawseti(L, (0 < a_idx) ? a_idx : (a_idx - 1), a_i);
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawseti(lua_State* L,
-                    int a_idx, int a_i, KeyTable const &a_val) noexcept {
+inline void     rawseti(lua_State* L,
+                        int a_idx, int a_i, KeyTable const &a_val) {
   newtable(L, a_val);
   lua_rawseti(L, (0 < a_idx) ? a_idx : (a_idx - 1), a_i);
 }
 // =============================================================================
 template <typename T>
-inline void rawset(lua_State* L,
-                   int a_idx, const char* a_key, T&& a_val) noexcept {
+inline void     rawset(lua_State* L,
+                       int a_idx, const char* a_key, T&& a_val) {
   OBORO_TRACE_DEBUG("oboro::rawset<T>");
   OBORO_ASSERT(L, "ERROR! oboro::rawset: invalid lua_State");
   OBORO_ASSERT(0 != a_idx, "ERROR! oboro::rawset: invalid index");
@@ -206,29 +235,25 @@ inline void rawset(lua_State* L,
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawset(lua_State* L, int a_idx,
-                   const char* a_key, IdxTable const &a_val) noexcept {
+inline void     rawset(lua_State* L, int a_idx,
+                       const char* a_key, IdxTable const &a_val) {
   push(L, a_key);
   newtable(L, a_val);
   lua_rawset(L, (0 < a_idx) ? a_idx : (a_idx - 2));
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawset(lua_State* L, int a_idx,
-                   const char* a_key, KeyTable const &a_val) noexcept {
+inline void     rawset(lua_State* L, int a_idx,
+                       const char* a_key, KeyTable const &a_val) {
   push(L, a_key);
   newtable(L, a_val);
   lua_rawset(L, (0 < a_idx) ? a_idx : (a_idx - 2));
 }
 // =============================================================================
-// -----------------------------------------------------------------------------
-template <typename T> inline void rawsets(lua_State*, int, T &&);
-// -----------------------------------------------------------------------------
 template <>
-inline void rawsets(lua_State* L, int a_idx, IdxTable const & a_Table) {
+inline void     rawsets(lua_State* L, int a_idx, IdxTable const & a_Table) {
   OBORO_TRACE_DEBUG("oboro::rawsets<IdxTable const &>");
-  OBORO_ASSERT(L,
-               "ERROR! oboro::rawsets<IdxTable const &>: invalid lua_State");
+  OBORO_ASSERT(L, "ERROR! oboro::rawsets<IdxTable const &>: invalid lua_State");
 
   const size_t s = a_Table.size();
   if (0 == s) { return; }
@@ -252,12 +277,6 @@ inline void rawsets(lua_State* L, int a_idx, IdxTable const & a_Table) {
       rawseti(L, a_idx, j, any_cast<char*>(v));
     } else if (v.type() == typeid(const char*)) {
       rawseti(L, a_idx, j, any_cast<const char*>(v));
-    } else if (v.type() == typeid(std::string)) {
-      rawseti(L, a_idx, j, any_cast<std::string>(v).c_str());
-      /*
-    } else if (v.type() == typeid(Closure)) {
-      rawseti(L, a_idx, j, any_cast<Closure>(v));
-      */
     } else if (v.type() == typeid(lua_CFunction)) {
       rawseti(L, a_idx, j, any_cast<lua_CFunction>(v));
     } else if (v.type() == typeid(IdxTable const &)) {
@@ -273,19 +292,19 @@ inline void rawsets(lua_State* L, int a_idx, IdxTable const & a_Table) {
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawsets(lua_State* L, int a_idx, IdxTable & a_Table) {
+inline void     rawsets(lua_State* L, int a_idx, IdxTable & a_Table) {
+  OBORO_TRACE_DEBUG("oboro::rawsets<IdxTable &>");
+  rawsets(L, a_idx, static_cast<IdxTable const &>(a_Table));
+}
+// -----------------------------------------------------------------------------
+template <>
+inline void     rawsets(lua_State* L, int a_idx, IdxTable && a_Table) {
   OBORO_TRACE_DEBUG("oboro::rawsets<IdxTable &&>");
   rawsets(L, a_idx, static_cast<IdxTable const &>(a_Table));
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawsets(lua_State* L, int a_idx, IdxTable && a_Table) {
-  OBORO_TRACE_DEBUG("oboro::rawsets<IdxTable &&>");
-  rawsets(L, a_idx, static_cast<IdxTable const &>(a_Table));
-}
-// -----------------------------------------------------------------------------
-template <>
-inline void rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
+inline void     rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
   OBORO_TRACE_DEBUG("oboro::rawsets<KeyTable const &>");
   OBORO_ASSERT(L,
                "ERROR! oboro::rawsets<KeyTable const &>: invalid lua_State");
@@ -294,7 +313,6 @@ inline void rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
 
   for (const KeyVal& v : a_Table) {
     using std::get;
-    using std::string;
     using boost::any_cast;
     if        (false) {
     } else if (get<1>(v).type() == typeid(NIL)) {
@@ -311,12 +329,6 @@ inline void rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
       rawset(L, a_idx, get<0>(v).c_str(), any_cast<char*>(get<1>(v)));
     } else if (get<1>(v).type() == typeid(const char*)) {
       rawset(L, a_idx, get<0>(v).c_str(), any_cast<const char*>(get<1>(v)));
-    } else if (get<1>(v).type() == typeid(string)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<string>(get<1>(v)).c_str());
-      /*
-    } else if (get<1>(v).type() == typeid(Closure)) {
-      rawset(L, a_idx, get<0>(v).c_str(), any_cast<Closure>(get<1>(v)));
-      */
     } else if (get<1>(v).type() == typeid(lua_CFunction)) {
       rawset(L, a_idx, get<0>(v).c_str(), any_cast<lua_CFunction>(get<1>(v)));
     } else if (get<1>(v).type() == typeid(IdxTable const &)) {
@@ -334,36 +346,33 @@ inline void rawsets(lua_State* L, int a_idx, KeyTable const & a_Table) {
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawsets(lua_State* L, int a_idx, KeyTable & a_Table) {
-  OBORO_TRACE_DEBUG("oboro::rawsets<KeyTable &&>");
+inline void     rawsets(lua_State* L, int a_idx, KeyTable & a_Table) {
+  OBORO_TRACE_DEBUG("oboro::rawsets<KeyTable &>");
   rawsets(L, a_idx, static_cast<KeyTable const &>(a_Table));
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void rawsets(lua_State* L, int a_idx, KeyTable && a_Table) {
+inline void     rawsets(lua_State* L, int a_idx, KeyTable && a_Table) {
   OBORO_TRACE_DEBUG("oboro::rawsets<KeyTable &&>");
   rawsets(L, a_idx, static_cast<KeyTable const &>(a_Table));
 }
 // =============================================================================
-template <typename T> inline void createtable(lua_State*, int) noexcept;
-// -----------------------------------------------------------------------------
 template <>
-inline void createtable<IdxTable>(lua_State* L, int s) noexcept {
+inline void     createtable<IdxTable>(lua_State* L, int s) noexcept {
   OBORO_TRACE_DEBUG("oboro::createtable<IdxTable>");
   OBORO_ASSERT(L, "ERROR! oboro::createtable<IdxTable>: invalid lua_State");
   lua_createtable(L, static_cast<int>(s), 0);
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void createtable<KeyTable>(lua_State* L, int s) noexcept {
+inline void     createtable<KeyTable>(lua_State* L, int s) noexcept {
   OBORO_TRACE_DEBUG("oboro::createtable<KeyTable>");
   OBORO_ASSERT(L, "ERROR! oboro::createtable<KeyTable>: invalid lua_State");
   lua_createtable(L, 0, static_cast<int>(s));
 }
 // =============================================================================
-// -----------------------------------------------------------------------------
 template <typename T>
-inline int newtable(lua_State* L, T && a_Table) {
+inline int      newtable(lua_State* L, T && a_Table) {
   OBORO_TRACE_DEBUG("oboro::newtable<T>");
   OBORO_ASSERT(L, "ERROR! oboro::newtable<T>: invalid lua_State");
   createtable<typename std::decay<T>::type>(L,
@@ -374,12 +383,9 @@ inline int newtable(lua_State* L, T && a_Table) {
   return 1;
 }
 // =============================================================================
-template <typename T> int newmetatable(lua_State* ,
-                                       const std::string&, T &&);
-// -----------------------------------------------------------------------------
 template <typename T>
-inline int newmetatable(lua_State* L,
-                        const std::string& a_name, T && a_Table) {
+inline int      newmetatable(lua_State* L,
+                             const std::string& a_name, T && a_Table) {
   OBORO_TRACE_DEBUG("oboro::newmetatable<T &&>");
   OBORO_ASSERT(L, "ERROR! oboro::newmetatable<T &&>: invalid lua_State");
   if (0 == luaL_newmetatable(L, a_name.c_str())) {

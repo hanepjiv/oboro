@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/06/04
+ *  @date 2015/06/05
  */
 
 // #############################################################################
@@ -55,18 +55,6 @@ namespace oboro {
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 class Module {
-  // ===========================================================================
-  // define  -------------------------------------------------------------------
- public:
-  // ===========================================================================
-  // exception  ----------------------------------------------------------------
- public:
-  // ===========================================================================
-  // static function  ----------------------------------------------------------
- public:
-  // ===========================================================================
-  // static variable  ----------------------------------------------------------
- public:
   // ===========================================================================
   // function  -----------------------------------------------------------------
  public:
@@ -126,27 +114,27 @@ inline Module::~Module() noexcept {
 }
 
 // =============================================================================
-inline std::string const & Module::getPACKAGE() const noexcept {
+inline std::string const &      Module::getPACKAGE() const noexcept {
   return m_PACKAGE;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getCURRENT() const noexcept {
+inline unsigned const &         Module::getCURRENT() const noexcept {
   return m_CURRENT;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getAGE() const noexcept {
+inline unsigned const &         Module::getAGE() const noexcept {
   return m_AGE;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getREVISION() const noexcept {
+inline unsigned const &         Module::getREVISION() const noexcept {
   return m_REVISION;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getMAJOR() const noexcept {
+inline unsigned const &         Module::getMAJOR() const noexcept {
   return m_MAJOR;
 }
 // -----------------------------------------------------------------------------
-inline std::string const & Module::getRELEASE() const noexcept {
+inline std::string const &      Module::getRELEASE() const noexcept {
   return m_RELEASE;
 }
 // =============================================================================
@@ -164,7 +152,7 @@ inline Module& Module::def(T&& a_Val) noexcept {
   return *this;
 }
 // =============================================================================
-inline Module&  Module::end() noexcept {
+inline Module& Module::end() noexcept {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::end()",
                      m_PACKAGE.c_str(), m_RELEASE.c_str());
   return *this;

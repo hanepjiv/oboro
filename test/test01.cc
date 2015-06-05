@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/06/04
+ *  @date 2015/06/05
  */
 
 
@@ -42,8 +42,10 @@
 #include <config.h>
 #endif  // HAVE_CONFIG_H
 
+#if 0
 #undef OBORO_VERBOSITY
 #define OBORO_VERBOSITY OBORO_VERBOSITY_ALL
+#endif
 #include <oboro/oboro.hpp>
 #include <oboro/function.hpp>
 #include <oboro/module.hpp>
@@ -54,32 +56,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif  // __cplusplus
-
   // ===========================================================================
   static int c_func(lua_State* L);
-  int c_func(lua_State* L) {
-    int x = static_cast<int>(lua_tonumber(L, 1));
-    int y = static_cast<int>(lua_tonumber(L, 2));
-    lua_settop(L, 0);
-    lua_pushnumber(L, x + y);
-    return 1;
-  }
-  // ===========================================================================
   static int c_index(lua_State* L);
-  int c_index(lua_State* L) {
-    std::printf("c_index\n");
-    oboro::printStack(L);
-    int** ppi = static_cast<int**>(lua_touserdata(L, 1));
-    const char* key = lua_tostring(L, 2);
-    lua_settop(L, 0);
-    if (0 == std::strcmp("test", key)) {
-      lua_pushnumber(L, **ppi);
-    } else {
-      lua_pushnil(L);
-    }
-    return 1;
-  }
-
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
@@ -211,3 +190,33 @@ int main(int argc, char* argv[]) {
   }
   lua_close(L);
 }
+// /////////////////////////////////////////////////////////////////////////////
+// =============================================================================
+#ifdef __cplusplus
+extern "C" {
+#endif  // __cplusplus
+  // ===========================================================================
+  int c_func(lua_State* L) {
+    int ret = static_cast<int>(lua_tonumber(L, 1)) +
+              static_cast<int>(lua_tonumber(L, 2));
+    lua_settop(L, 0);
+    lua_pushnumber(L, ret);
+    return 1;
+  }
+  // ===========================================================================
+  int c_index(lua_State* L) {
+    std::printf("c_index\n");
+    oboro::printStack(L);
+    int** ppi = static_cast<int**>(lua_touserdata(L, 1));
+    const char* key = lua_tostring(L, 2);
+    lua_settop(L, 0);
+    if (0 == std::strcmp("test", key)) {
+      lua_pushnumber(L, **ppi);
+    } else {
+      lua_pushnil(L);
+    }
+    return 1;
+  }
+#ifdef __cplusplus
+}  // extern "C"
+#endif  // __cplusplus
