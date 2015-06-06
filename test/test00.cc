@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/06/04
+ *  @date 2015/06/07
  */
 
 
@@ -42,6 +42,10 @@
 #include <config.h>
 #endif  // HAVE_CONFIG_H
 
+// #undef OBORO_VERBOSITY
+// #define OBORO_VERBOSITY OBORO_VERBOSITY_ALL
+
+#include <oboro/initializer.hpp>
 #include <oboro/oboro.hpp>
 
 #include <cstdio>
@@ -69,10 +73,10 @@ extern "C" {
   // ===========================================================================
   int c_func(lua_State* L) {
     ::oboro::printStack(L);
-    int x = static_cast<int>(lua_tonumber(L, 1));
-    int y = static_cast<int>(lua_tonumber(L, 2));
+    int x = static_cast<int>(lua_tonumber(L, 1)) +
+            static_cast<int>(lua_tonumber(L, 2));
     lua_settop(L, 0);
-    lua_pushnumber(L, x + y);
+    lua_pushnumber(L, x);
     ::oboro::printStack(L);
     return 1;
   }
@@ -85,9 +89,10 @@ extern "C" {
 // /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 int main(int argc, char* argv[]) {
-  lua_State* L = luaL_newstate();
-  luaL_openlibs(L);
+  OBORO_TRACE("TEST00");
+  oboro::Initializer L;
   {
+    luaL_openlibs(L);
     lua_register(L, "c_func", c_func);
     if (luaL_dostring(L,
                       "local _M = {}\n"
@@ -95,7 +100,7 @@ int main(int argc, char* argv[]) {
                       "    print([[hello]], c_func(1, 2))\n"
                       "end\n"
                       "return _M")) {
-      std::fprintf(stderr, "ERROR!: luaL_dostring");
+      std::fprintf(stderr, "ERROR!: luaL_dostring\n");
       exit(EXIT_FAILURE);
     }
     lua_setglobal(L, "Hello");
@@ -109,6 +114,5 @@ int main(int argc, char* argv[]) {
       }
     }
   }
-  lua_close(L);
   return 0;
 }

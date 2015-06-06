@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/06/03
+ *  @date 2015/06/06
  */
 
 
@@ -45,24 +45,13 @@
 #include "./oboro.hpp"
 
 
-namespace {
-
-
-
-}  // namespace
-
+// #############################################################################
 namespace oboro {
-
-// /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 extern int oboroClosure(lua_State* L);
-
 }  // namespace oboro
-
-
+// #############################################################################
 namespace oboro {
-
-// /////////////////////////////////////////////////////////////////////////////
 // =============================================================================
 int oboroClosure(lua_State* L) {
 # pragma GCC diagnostic push
@@ -73,14 +62,7 @@ int oboroClosure(lua_State* L) {
   std::printf("%p\n", f);
   return f(L);
 }
-
 }  // namespace oboro
-
-namespace {
-
-
-
-}  // namespace
 
 
 #endif  /* OBORO_FUNCTION_HPP_ */

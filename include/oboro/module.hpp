@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/06/05
+ *  @date 2015/06/06
  */
 
 // #############################################################################
@@ -66,9 +66,9 @@ class Module {
   inline std::string const &    getRELEASE() const noexcept;
 
   template <typename T>
-  inline Module& def(const char*, T&&) noexcept;
+  inline Module& def(const char*, T) noexcept;
   template <typename T>
-  inline Module& def(T&&) noexcept;
+  inline Module& def(T) noexcept;
 
   inline Module& end() noexcept;
   // ===========================================================================
@@ -85,7 +85,7 @@ class Module {
  public:
   inline Module(const char* a_PACKAGE,
                 unsigned a_CURRENT, unsigned a_AGE, unsigned a_REVISION);
-  /* virtual */ ~Module() noexcept;
+  inline /* virtual */ ~Module() noexcept;
   // ---------------------------------------------------------------------------
  private:
   Module(const Module&) = delete;
@@ -139,15 +139,15 @@ inline std::string const &      Module::getRELEASE() const noexcept {
 }
 // =============================================================================
 template <typename T>
-inline Module& Module::def(const char* a_Key, T&& a_Val) noexcept {
-  OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T&&>(\"%s\", ...)",
+inline Module& Module::def(const char* a_Key, T a_Val) noexcept {
+  OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(\"%s\", ...)",
                      m_PACKAGE.c_str(), m_RELEASE.c_str(), a_Key);
   return *this;
 }
 // =============================================================================
 template <typename T>
-inline Module& Module::def(T&& a_Val) noexcept {
-  OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T&&>(...)",
+inline Module& Module::def(T a_Val) noexcept {
+  OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(...)",
                      m_PACKAGE.c_str(), m_RELEASE.c_str());
   return *this;
 }

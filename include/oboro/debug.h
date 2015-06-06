@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/06/02
+ *  @date 2015/06/06
  */
 
 
@@ -74,7 +74,13 @@
 #   define OBORO_VERBOSITY     OBORO_VERBOSITY_DEFAULT
 # endif
 /* ========================================================================== */
-# include <stdio.h>
+# ifdef __cplusplus
+#   include <cstdio>
+# else  /* !__cplusplus */
+#   include <stdio.h>
+#   define std::fprintf fprintf
+#   define std::fflush fflush
+# endif  /* !__cplusplus */
 /* ========================================================================== */
 # define OBORO_TRACE__(d)                                              \
   do {                                                                  \

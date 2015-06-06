@@ -36,6 +36,7 @@ set(oboro_HEADERS
 
   ${OBORO_INCLUDE_OBORO_SRC}/debug.h
 
+  ${OBORO_INCLUDE_OBORO_SRC}/initializer.hpp
   ${OBORO_INCLUDE_OBORO_SRC}/oboro.hpp
   ${OBORO_INCLUDE_OBORO_SRC}/module.hpp
   ${OBORO_INCLUDE_OBORO_SRC}/function.hpp

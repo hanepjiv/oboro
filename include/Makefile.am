@@ -3,6 +3,7 @@ nobase_include_HEADERS=\
 	oboro/call.h \
 	oboro/begin.h \
 	oboro/debug.h \
+	oboro/initializer.hpp \
 	oboro/oboro.hpp \
 	oboro/module.hpp \
 	oboro/function.hpp \
