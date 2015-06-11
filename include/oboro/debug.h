@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/06/06
+ *  @date 2015/06/07
  */
 
 
@@ -76,10 +76,15 @@
 /* ========================================================================== */
 # ifdef __cplusplus
 #   include <cstdio>
+#   include <cstdlib>
+#   include <cstdarg>
 # else  /* !__cplusplus */
 #   include <stdio.h>
 #   define std::fprintf fprintf
 #   define std::fflush fflush
+#   include <stdlib.h>
+#   define std::abort abort
+#   include <stdarg.h>
 # endif  /* !__cplusplus */
 /* ========================================================================== */
 # define OBORO_TRACE__(d)                                              \
@@ -223,7 +228,7 @@
 # endif  /* defined(__STDC__) && ... */
 /* ========================================================================== */
 # define OBORO_ASSERT__(c, t, d)                                       \
-  do { if (!(c)) { OBORO_TRACE_CRITICAL(t ": " d); abort(); } } while (0)
+    do { if (!(c)) { OBORO_TRACE_CRITICAL(t ": " d); std::abort(); } } while (0)
 # define OBORO_ASSERT_(c, t, d) OBORO_ASSERT__(c, t, d)
 # define OBORO_ASSERT(c, d) OBORO_ASSERT_(c, #c, d)
 /* -------------------------------------------------------------------------- */

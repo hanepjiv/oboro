@@ -44,15 +44,8 @@
 
 #include <lua.hpp>
 
-#include <boost/any.hpp>
-#include <boost/format.hpp>
-
 #include <cstdio>
-#include <stdexcept>
-#include <vector>
-#include <string>
 #include <utility>
-#include <type_traits>
 
 #include "./debug.h"
 
@@ -68,20 +61,23 @@ template <typename T>
 inline void     push(lua_State* L, T a_val) noexcept;
 // -----------------------------------------------------------------------------
 template <typename T>
-inline void     rawseti(lua_State* L, int a_index, int a_origin, T a_val);
+inline void     rawseti(lua_State* L,
+                        int a_index, int a_origin, T a_val) noexcept;
 // -----------------------------------------------------------------------------
 template <typename T>
-inline void     rawset(lua_State* L, int a_index, const char* a_key, T a_val);
+inline void     rawset(lua_State* L,
+                       int a_index, const char* a_key, T a_val) noexcept;
 // -----------------------------------------------------------------------------
 template <typename... Ts>
-inline void     rawsets(lua_State* L, int a_index, int a_origin, Ts... a_args);
+inline void     rawsets(lua_State* L,
+                        int a_index, int a_origin, Ts... a_args) noexcept;
 // -----------------------------------------------------------------------------
 template <typename... Ts>
-inline int      newtable(lua_State* L, Ts... a_args);
+inline void     newtable(lua_State* L, Ts... a_args) noexcept;
 // -----------------------------------------------------------------------------
 template <typename... Ts>
-inline int      newmetatable(lua_State* L, const std::string& a_name,
-                             Ts... a_args);
+inline void     newmetatable(lua_State* L, const char* a_name,
+                             Ts... a_args) noexcept;
 }  // namespace oboro
 // #############################################################################
 namespace oboro {
@@ -174,28 +170,31 @@ inline void     push(lua_State* L, lua_CFunction a_val) noexcept {
 }
 // =============================================================================
 template <typename T>
-inline void     rawseti(lua_State* L, int a_index, int a_origin, T a_val) {
+inline void     rawseti(lua_State* L,
+                        int a_index, int a_origin, T a_val) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawseti<T>");
   OBORO_ASSERT(L, "ERROR! oboro::rawseti: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawseti: invalid index");
-  push(L, a_val);
+  oboro::push(L, a_val);
   lua_rawseti(L, (0 < a_index) ? a_index : (a_index - 1), a_origin);
 }
 // =============================================================================
 template <typename T>
-inline void     rawset(lua_State* L, int a_index, const char* a_key, T a_val) {
+inline void     rawset(lua_State* L,
+                       int a_index, const char* a_key, T a_val) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawset<T>");
   OBORO_ASSERT(L, "ERROR! oboro::rawset: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawset: invalid index");
   OBORO_ASSERT(a_key, "ERROR! oboro::rawset: invalid key");
-  push(L, a_key);
-  push(L, a_val);
+  oboro::push(L, a_key);
+  oboro::push(L, a_val);
   lua_rawset(L, (0 < a_index) ? a_index : (a_index - 2));
 }
 // =============================================================================
 template <typename T, typename... Ts>
 inline void     rawsets(lua_State* L, int a_index, int a_origin,
-                        std::pair<const char*, T> a_val, Ts... a_tails) {
+                        std::pair<const char*, T> a_val,
+                        Ts... a_tails) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawsets<std::pair<const char*, T>, Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::rawsets: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawsets: invalid index");
@@ -206,7 +205,7 @@ inline void     rawsets(lua_State* L, int a_index, int a_origin,
 // -----------------------------------------------------------------------------
 template <typename T, typename... Ts>
 inline void     rawsets(lua_State* L, int a_index, int a_origin,
-                        T a_val, Ts... a_tails) {
+                        T a_val, Ts... a_tails) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawsets<T, Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::rawsets: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawsets: invalid index");
@@ -216,7 +215,8 @@ inline void     rawsets(lua_State* L, int a_index, int a_origin,
 }
 // -----------------------------------------------------------------------------
 template <typename T>
-inline void     rawsets(lua_State* L, int a_index, int a_origin, T a_val) {
+inline void     rawsets(lua_State* L,
+                        int a_index, int a_origin, T a_val) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawsets<T>");
   OBORO_ASSERT(L, "ERROR! oboro::rawsets: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawsets: invalid index");
@@ -225,7 +225,7 @@ inline void     rawsets(lua_State* L, int a_index, int a_origin, T a_val) {
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void     rawsets(lua_State* L, int a_index, int a_origin) {
+inline void     rawsets(lua_State* L, int a_index, int a_origin) noexcept {
   OBORO_TRACE_DEBUG("oboro::rawsets<>");
   OBORO_ASSERT(L, "ERROR! oboro::rawsets: invalid lua_State");
   OBORO_ASSERT(0 != a_index, "ERROR! oboro::rawsets: invalid index");
@@ -255,7 +255,7 @@ struct size_of_pair<T, Ts...> {
 };
 // =============================================================================
 template <typename... Ts>
-inline int      newtable(lua_State* L, Ts... a_args) {
+inline void     newtable(lua_State* L, Ts... a_args) noexcept {
   OBORO_TRACE_DEBUG("oboro::newtable<Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::newtable<Ts...>: invalid lua_State");
   OBORO_TRACEF_INFO("oboro::newtable<Ts...>: lua_createtable(L, %d, %d);",
@@ -265,39 +265,35 @@ inline int      newtable(lua_State* L, Ts... a_args) {
                   static_cast<int>(sizeof...(Ts) - size_of_pair<Ts...>::value),
                   static_cast<int>(size_of_pair<Ts...>::value));
   oboro::rawsets(L, -1, 1, a_args...);
-  return 1;
 }
 // -----------------------------------------------------------------------------
 template <>
-inline int      newtable(lua_State* L) {
+inline void     newtable(lua_State* L) noexcept {
   OBORO_TRACE_DEBUG("oboro::newtable<Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::newtable<Ts...>: invalid lua_State");
   lua_createtable(L, 0, 0);
-  return 1;
 }
 // =============================================================================
 template <typename... Ts>
-inline int      newmetatable(lua_State* L, const std::string& a_name,
-                             Ts... a_args) {
+inline void     newmetatable(lua_State* L, const char* a_name,
+                             Ts... a_args) noexcept {
   OBORO_TRACE_DEBUG("oboro::newmetatable<Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::newmetatable<Ts...>: invalid lua_State");
-  if (0 == luaL_newmetatable(L, a_name.c_str())) {
+  if (0 == luaL_newmetatable(L, a_name)) {
     OBORO_TRACEF_WARNING("oboro::newmetatable<Ts...>: "
-                         "The registry already has \"%s\"", a_name.c_str());
+                         "The registry already has \"%s\"", a_name);
   }
   oboro::rawsets(L, -1, 1, a_args...);
-  return 1;
 }
 // -----------------------------------------------------------------------------
 template <>
-inline int      newmetatable(lua_State* L, const std::string& a_name) {
+inline void     newmetatable(lua_State* L, const char* a_name) noexcept {
   OBORO_TRACE_DEBUG("oboro::newmetatable<Ts...>");
   OBORO_ASSERT(L, "ERROR! oboro::newmetatable<Ts...>: invalid lua_State");
-  if (0 == luaL_newmetatable(L, a_name.c_str())) {
+  if (0 == luaL_newmetatable(L, a_name)) {
     OBORO_TRACEF_WARNING("oboro::newmetatable<Ts...>: "
-                         "The registry already has \"%s\"", a_name.c_str());
+                         "The registry already has \"%s\"", a_name);
   }
-  return 1;
 }
 }  // namespace oboro
 

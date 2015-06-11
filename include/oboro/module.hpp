@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/06/06
+ *  @date 2015/06/08
  */
 
 // #############################################################################
@@ -44,6 +44,9 @@
 #include <boost/format.hpp>
 
 #include <string>
+#include <cstdint>
+#include <bitset>
+#include <stdexcept>
 
 #undef OBORO_VERBOSITY
 #define OBORO_VERBOSITY OBORO_VERBOSITY_ALL
@@ -56,6 +59,12 @@ namespace oboro {
 // =============================================================================
 class Module {
   // ===========================================================================
+  // define  -------------------------------------------------------------------
+ public:
+  enum class Flag : size_t {
+    END,
+      };
+  // ===========================================================================
   // function  -----------------------------------------------------------------
  public:
   inline std::string const &    getPACKAGE() const noexcept;
@@ -65,21 +74,20 @@ class Module {
   inline unsigned const &       getMAJOR() const noexcept;
   inline std::string const &    getRELEASE() const noexcept;
 
-  template <typename T>
-  inline Module& def(const char*, T) noexcept;
-  template <typename T>
-  inline Module& def(T) noexcept;
+  template <typename T>  inline Module& def(const char*, T);
+  template <typename T>  inline Module& def(T);
 
-  inline Module& end() noexcept;
+  inline Module& end();
   // ===========================================================================
   // variable  -----------------------------------------------------------------
  private:
-  std::string   m_PACKAGE;
-  unsigned      m_CURRENT;
-  unsigned      m_AGE;
-  unsigned      m_REVISION;
-  unsigned      m_MAJOR;
-  std::string   m_RELEASE;
+  std::bitset<sizeof(std::intptr_t)>    m_Flags;
+  const unsigned                        m_CURRENT;
+  const unsigned                        m_AGE;
+  const unsigned                        m_REVISION;
+  const unsigned                        m_MAJOR;
+  const std::string                     m_RELEASE;
+  const std::string                     m_PACKAGE;
   // ===========================================================================
   // constructor  --------------------------------------------------------------
  public:
@@ -96,13 +104,14 @@ class Module {
 // =============================================================================
 inline Module::Module(const char* a_PACKAGE,
                       unsigned a_CURRENT, unsigned a_AGE, unsigned a_REVISION)
-    : m_PACKAGE(a_PACKAGE)
+    : m_Flags(0)
     , m_CURRENT(a_CURRENT)
     , m_AGE(a_AGE)
     , m_REVISION(a_REVISION)
     , m_MAJOR(m_CURRENT - m_AGE)
     , m_RELEASE((boost::format("%1$d.%2$d-%3$d") %
-                 m_MAJOR % m_AGE % m_REVISION).str().c_str()) {
+                 m_MAJOR % m_AGE % m_REVISION).str().c_str())
+    , m_PACKAGE(a_PACKAGE) {
   OBORO_TRACEF_DEBUG("oboro::Module::Module(\"%s\", \"%s\")",
                      m_PACKAGE.c_str(), m_RELEASE.c_str());
   OBORO_ASSERT(m_CURRENT > m_AGE, "ERROR!: invalid arguments.");
@@ -139,22 +148,37 @@ inline std::string const &      Module::getRELEASE() const noexcept {
 }
 // =============================================================================
 template <typename T>
-inline Module& Module::def(const char* a_Key, T a_Val) noexcept {
+inline Module& Module::def(const char* a_Key, T a_Val) {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(\"%s\", ...)",
                      m_PACKAGE.c_str(), m_RELEASE.c_str(), a_Key);
+  if (m_Flags.test(static_cast<size_t>(Flag::END))) {
+    throw std::runtime_error((boost::format(
+        "ERROR!: oboro::Module(%1%, \"%2%\")::def<T>(\"%3%\", ...)): "
+        "already end.") % m_PACKAGE % m_RELEASE % a_Key).str().c_str());
+  }
   return *this;
 }
 // =============================================================================
 template <typename T>
-inline Module& Module::def(T a_Val) noexcept {
+inline Module& Module::def(T a_Val) {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(...)",
                      m_PACKAGE.c_str(), m_RELEASE.c_str());
+  if (m_Flags.test(static_cast<size_t>(Flag::END))) {
+    throw std::runtime_error((boost::format(
+        "ERROR!: oboro::Module(%1%, \"%2%\")::def(...): "
+        "already end.") % m_PACKAGE % m_RELEASE).str().c_str());
+  }
   return *this;
 }
 // =============================================================================
-inline Module& Module::end() noexcept {
+inline Module& Module::end() {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::end()",
                      m_PACKAGE.c_str(), m_RELEASE.c_str());
+  if (m_Flags.test(static_cast<size_t>(Flag::END))) {
+    throw std::runtime_error((boost::format(
+        "ERROR!: oboro::Module(%1%, \"%2%\")::end(): "
+        "already end.") % m_PACKAGE % m_RELEASE).str().c_str());
+  }
   return *this;
 }
 

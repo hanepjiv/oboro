@@ -45,9 +45,12 @@
 #undef OBORO_VERBOSITY
 #define OBORO_VERBOSITY OBORO_VERBOSITY_INFO
 
+#include <oboro/initializer.hpp>
 #include <oboro/oboro.hpp>
 #include <oboro/function.hpp>
 #include <oboro/module.hpp>
+
+#include <cstring>
 
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -56,8 +59,8 @@
 extern "C" {
 #endif  // __cplusplus
   // ===========================================================================
-  static int c_func(lua_State* L);
-  static int c_index(lua_State* L);
+  static int c_func(lua_State* L) noexcept;
+  static int c_index(lua_State* L) noexcept;
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
@@ -67,7 +70,7 @@ extern "C" {
 extern "C" {
 #endif  // __cplusplus
   // ===========================================================================
-  int c_func(lua_State* L) {
+  int c_func(lua_State* L) noexcept {
     int ret = static_cast<int>(lua_tonumber(L, 1)) +
               static_cast<int>(lua_tonumber(L, 2));
     lua_settop(L, 0);
@@ -75,7 +78,7 @@ extern "C" {
     return 1;
   }
   // ===========================================================================
-  int c_index(lua_State* L) {
+  int c_index(lua_State* L) noexcept {
     std::printf("c_index\n");
     oboro::printStack(L);
     int** ppi = static_cast<int**>(lua_touserdata(L, 1));
@@ -95,8 +98,9 @@ extern "C" {
 // =============================================================================
 int main(int argc, char* argv[]) {
   OBORO_TRACE("TEST01");
-  lua_State* L = luaL_newstate();
+  oboro::Initializer L;
   luaL_openlibs(L);
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::00");
     {
       oboro::newtable(L, 1, -1, 1.0, -1.0, "test");
@@ -108,6 +112,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::01");
     {
       oboro::newmetatable(L, "OBORO", std::make_pair("_test", "TEST"));
@@ -115,6 +120,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::02");
     {
       oboro::newtable(L, 1, -1, 1.0, -1.0, "test");
@@ -134,6 +140,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::03");
     {
       int** ppi = static_cast<int**>(lua_newuserdata(L, sizeof(int*)));
@@ -151,6 +158,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::04");
     {
       oboro::newtable(L,
@@ -165,6 +173,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::05");
     {
       oboro::Module("test", 1, 0, 0)
@@ -174,6 +183,7 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
+  // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::06");
     {
 # pragma GCC diagnostic push
@@ -192,5 +202,4 @@ int main(int argc, char* argv[]) {
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
   }
-  lua_close(L);
 }
