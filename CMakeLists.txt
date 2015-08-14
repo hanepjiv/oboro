@@ -23,7 +23,7 @@
 # ##############################################################################
 # oboro  =======================================================================
 # ------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/Modules/")
 include(FindPkgConfig)
@@ -31,7 +31,10 @@ include(FindThreads)
 include(CCxxFlags)
 include(OboroOptions)
 # ------------------------------------------------------------------------------
-set(OBORO_PACKAGE "oboro")
+set(OBORO_PACKAGE       "oboro")
+set(OBORO_BUGREPORT     "hanepjiv <hanepjiv@gmail.com>")
+set(OBORO_URL           "https://")
+# ------------------------------------------------------------------------------
 string(TOUPPER ${OBORO_PACKAGE} OBORO_PACKAGE_UPPER)
 # ##############################################################################
 # version ======================================================================
@@ -81,7 +84,7 @@ endif()
 find_package(Lua51 REQUIRED)
 # boost ------------------------------------------------------------------------
 set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.55.0 REQUIRED COMPONENTS)
+find_package(Boost 1.56.0 REQUIRED COMPONENTS)
 # ltdl -------------------------------------------------------------------------
 find_path(LTDL_INCLUDE_DIR ltdl.h)
 find_library(LTDL_LIBRARIES NAMES ltdl)
@@ -124,7 +127,7 @@ list(REMOVE_ITEM OBORO_LIBRARIES "")
 # ##############################################################################
 # extra ========================================================================
 # ------------------------------------------------------------------------------
-configure_file(${abs_top_srcdir}/config.h.in config.h @ONLY)
+configure_file(${abs_top_srcdir}/config.h.cmake config.h @ONLY)
 configure_file(${abs_top_srcdir}/oboro.pc.in oboro.pc @ONLY)
 configure_file(${abs_top_srcdir}/Doxyfile.in Doxyfile @ONLY)
 # ##############################################################################
