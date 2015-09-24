@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/06/07
+ *  @date 2015/09/25
  */
 
 
@@ -50,6 +50,7 @@
 #include <oboro/function.hpp>
 #include <oboro/module.hpp>
 
+#include <stdexcept>
 #include <cstring>
 
 
@@ -195,7 +196,7 @@ int main(int argc, char* argv[]) {
       lua_pushnumber(L, 2);
       if (lua_pcall(L, 2, 1, 0)) {
         std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
-        exit(EXIT_FAILURE);
+        throw std::runtime_error("ERROR!");
       }
       oboro::printStack(L);
       lua_pop(L, 1);

@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/06/07
+ *  @date 2015/09/25
  */
 
 
@@ -48,6 +48,7 @@
 #include <oboro/initializer.hpp>
 #include <oboro/oboro.hpp>
 
+#include <stdexcept>
 #include <cstdio>
 
 
@@ -101,7 +102,7 @@ int main(int argc, char* argv[]) {
                       "end\n"
                       "return _M")) {
       std::fprintf(stderr, "ERROR!: luaL_dostring\n");
-      exit(EXIT_FAILURE);
+      throw std::runtime_error("ERROR!");
     }
     lua_setglobal(L, "Hello");
     {
@@ -110,7 +111,7 @@ int main(int argc, char* argv[]) {
       lua_rawget(L, -2);
       if (lua_pcall(L, 0, 0, 0)) {
         std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
-        exit(EXIT_FAILURE);
+        throw std::runtime_error("ERROR!");
       }
     }
   }
