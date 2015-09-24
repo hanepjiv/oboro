@@ -53,9 +53,7 @@ if(OBORO_ENABLE_TEST)
     ${abs_top_srcdir}/test/test00.cc
     )
   add_executable(test00 ${test00_SRCS})
-  target_link_libraries(test00
-    ${OBORO_LIBRARIES}
-    )
+  target_link_libraries(test00 ${OBORO_LIBRARIES})
   set_target_properties(test00
     PROPERTIES
     COMPILE_FLAGS "${OBORO_CXX_FLAGS}"
@@ -75,9 +73,7 @@ if(OBORO_ENABLE_TEST)
     ${abs_top_srcdir}/test/test01.cc
     )
   add_executable(test01 ${test01_SRCS})
-  target_link_libraries(test01
-    ${OBORO_LIBRARIES}
-    )
+  target_link_libraries(test01 ${OBORO_LIBRARIES})
   set_target_properties(test01
     PROPERTIES
     COMPILE_FLAGS "${OBORO_CXX_FLAGS}"

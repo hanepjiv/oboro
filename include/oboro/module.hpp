@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/09/21
+ *  @date 2015/09/25
  */
 
 // #############################################################################
@@ -66,10 +66,10 @@ class Module {
   // function  -----------------------------------------------------------------
  public:
   inline std::string const &             getPACKAGE() const noexcept;
-  inline unsigned const &                getCURRENT() const noexcept;
-  inline unsigned const &                getAGE() const noexcept;
-  inline unsigned const &                getREVISION() const noexcept;
-  inline unsigned const &                getMAJOR() const noexcept;
+  inline unsigned                        getCURRENT() const noexcept;
+  inline unsigned                        getAGE() const noexcept;
+  inline unsigned                        getREVISION() const noexcept;
+  inline unsigned                        getMAJOR() const noexcept;
   inline std::string const &             getVERSION() const noexcept;
 
   template <typename T> inline Module&   def(const char*, T);
@@ -123,19 +123,19 @@ inline std::string const & Module::getPACKAGE() const noexcept {
   return m_PACKAGE;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getCURRENT() const noexcept {
+inline unsigned Module::getCURRENT() const noexcept {
   return m_CURRENT;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getAGE() const noexcept {
+inline unsigned Module::getAGE() const noexcept {
   return m_AGE;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getREVISION() const noexcept {
+inline unsigned Module::getREVISION() const noexcept {
   return m_REVISION;
 }
 // -----------------------------------------------------------------------------
-inline unsigned const & Module::getMAJOR() const noexcept {
+inline unsigned Module::getMAJOR() const noexcept {
   return (m_CURRENT - m_AGE);
 }
 // -----------------------------------------------------------------------------

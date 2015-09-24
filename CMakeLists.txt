@@ -21,52 +21,134 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 # ##############################################################################
-# oboro  =======================================================================
+# CMake  =======================================================================
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.2)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-  "${CMAKE_CURRENT_SOURCE_DIR}/Modules/")
-include(FindPkgConfig)
-include(FindThreads)
-include(CCxxFlags)
-include(OboroOptions)
-# ------------------------------------------------------------------------------
-set(OBORO_PACKAGE       "oboro")
-set(OBORO_BUGREPORT     "hanepjiv <hanepjiv@gmail.com>")
-set(OBORO_URL           "https://")
-# ------------------------------------------------------------------------------
-string(TOUPPER ${OBORO_PACKAGE} OBORO_PACKAGE_UPPER)
+set(CMAKE_MODULE_PATH
+  ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules/")
 # ##############################################################################
-# version ======================================================================
+# oboro  ====================================================================
 # ------------------------------------------------------------------------------
-set(OBORO_CURRENT  "0")
-set(OBORO_REVISION "0")
-set(OBORO_AGE      "0")
+set(OBORO_PACKAGE     "oboro")
+set(OBORO_CURRENT     "0")
+set(OBORO_REVISION    "0")
+set(OBORO_AGE         "0")
+set(OBORO_BUGREPORT   "hanepjiv <hanepjiv@gmail.com>")
+set(OBORO_URL         "https://")
 # ------------------------------------------------------------------------------
 if(${OBORO_CURRENT} LESS ${OBORO_AGE})
   message(FATAL_ERROR
     "OBORO_AGE `${OBORO_AGE}' is greater than the current interface number `${OBORO_CURRENT}'.")
 endif()
-math(EXPR OBORO_MAJOR "${OBORO_CURRENT}-${OBORO_AGE}")
 # ------------------------------------------------------------------------------
-set(OBORO_RELEASE "${OBORO_MAJOR}.${OBORO_AGE}.${OBORO_REVISION}")
+string(TOUPPER ${OBORO_PACKAGE} OBORO_PACKAGE_UPPER)
+math(EXPR OBORO_MAJOR "${OBORO_CURRENT}-${OBORO_AGE}")
+set(OBORO_VERSION "${OBORO_MAJOR}.${OBORO_AGE}.${OBORO_REVISION}")
 set(OBORO_SOVERSION "${OBORO_MAJOR}")
+# ------------------------------------------------------------------------------
+project(${OBORO_PACKAGE}
+  VERSION ${OBORO_VERSION}
+  LANGUAGES C CXX)
+# ##############################################################################
+# include  =====================================================================
+# ------------------------------------------------------------------------------
+include(FindPkgConfig)
+include(FindThreads)
+include(CCxxFlags)
+# ##############################################################################
+# options  =====================================================================
+# ------------------------------------------------------------------------------
+option(OBORO_ENABLE_TEST "Test feature." OFF)
 # ##############################################################################
 # flags  =======================================================================
+if (CMAKE_COMPILER_IS_GNUCC OR
+    CMAKE_C_COMPILER_ID STREQUAL "Clang")       # GCC or Clang  ================
+  set(OBORO_C_CXX_FLAGS                "-fno-asm -fno-builtin")
+  set(OBORO_C_CXX_FLAGS_DEBUG          "-DOBORO_DEBUG")
+  set(OBORO_C_CXX_FLAGS_RELWITHDEBINFO "-DOBORO_DEBUG")
+  set(OBORO_C_CXX_FLAGS_RELEASE        "-DNDEBUG")
+  set(OBORO_C_CXX_FLAGS_MINSIZEREL     "-DNDEBUG")
+  set(OBORO_C_FLAGS                    "-std=c99")
+  set(OBORO_C_FLAGS_DEBUG              "")
+  set(OBORO_C_FLAGS_RELWITHDEBINFO     "")
+  set(OBORO_C_FLAGS_RELEASE            "")
+  set(OBORO_C_FLAGS_MINSIZEREL         "")
+  set(OBORO_CXX_FLAGS                  "-std=c++11 -fexceptions -frtti")
+  set(OBORO_CXX_FLAGS_DEBUG            "")
+  set(OBORO_CXX_FLAGS_RELWITHDEBINFO   "")
+  set(OBORO_CXX_FLAGS_RELEASE          "")
+  set(OBORO_CXX_FLAGS_MINSIZEREL       "")
+endif()
 # ------------------------------------------------------------------------------
-set(OBORO_C_CXX_FLAGS_DEBUG "-DOBORO_DEBUG")
-set(OBORO_C_CXX_FLAGS_RELEASE "-DNDEBUG")
-set(OBORO_C_CXX_FLAGS "-fno-asm -fno-builtin")
-set(OBORO_C_FLAGS "${OBORO_C_CXX_FLAGS} -std=c99")
-set(OBORO_CXX_FLAGS "${OBORO_C_CXX_FLAGS} -std=c++11 -fexceptions -frtti")
+if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  =========================
+
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")    # Clang  =======================
+
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")    # Intel  =======================
+  message(FATAL_ERROR "Intel is not yet supported.")
+  set(OBORO_C_CXX_FLAGS                "TODO")
+  set(OBORO_C_CXX_FLAGS_DEBUG          "TODO")
+  set(OBORO_C_CXX_FLAGS_RELWITHDEBINFO "TODO")
+  set(OBORO_C_CXX_FLAGS_RELEASE        "TODO")
+  set(OBORO_C_CXX_FLAGS_MINSIZEREL     "TODO")
+  set(OBORO_C_FLAGS                    "TODO")
+  set(OBORO_C_FLAGS_DEBUG              "TODO")
+  set(OBORO_C_FLAGS_RELWITHDEBINFO     "TODO")
+  set(OBORO_C_FLAGS_RELEASE            "TODO")
+  set(OBORO_C_FLAGS_MINSIZEREL         "TODO")
+  set(OBORO_CXX_FLAGS                  "TODO")
+  set(OBORO_CXX_FLAGS_DEBUG            "TODO")
+  set(OBORO_CXX_FLAGS_RELWITHDEBINFO   "TODO")
+  set(OBORO_CXX_FLAGS_RELEASE          "TODO")
+  set(OBORO_CXX_FLAGS_MINSIZEREL       "TODO")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")     # MSVC  ========================
+  message(FATAL_ERROR "MSVC is not yet supported.")
+  set(OBORO_C_CXX_FLAGS                "TODO")
+  set(OBORO_C_CXX_FLAGS_DEBUG          "TODO")
+  set(OBORO_C_CXX_FLAGS_RELWITHDEBINFO "TODO")
+  set(OBORO_C_CXX_FLAGS_RELEASE        "TODO")
+  set(OBORO_C_CXX_FLAGS_MINSIZEREL     "TODO")
+  set(OBORO_C_FLAGS                    "TODO")
+  set(OBORO_C_FLAGS_DEBUG              "TODO")
+  set(OBORO_C_FLAGS_RELWITHDEBINFO     "TODO")
+  set(OBORO_C_FLAGS_RELEASE            "TODO")
+  set(OBORO_C_FLAGS_MINSIZEREL         "TODO")
+  set(OBORO_CXX_FLAGS                  "TODO")
+  set(OBORO_CXX_FLAGS_DEBUG            "TODO")
+  set(OBORO_CXX_FLAGS_RELWITHDEBINFO   "TODO")
+  set(OBORO_CXX_FLAGS_RELEASE          "TODO")
+  set(OBORO_CXX_FLAGS_MINSIZEREL       "TODO")
+endif()
+# ------------------------------------------------------------------------------
+set(OBORO_USER_C_CXX_FLAGS "${OBORO_C_CXX_FLAGS}"  CACHE STRING "")
+set(OBORO_USER_C_CXX_FLAGS_DEBUG "${OBORO_C_CXX_FLAGS_DEBUG}"  CACHE STRING "")
+set(OBORO_USER_C_CXX_FLAGS_RELWITHDEBINFO "${OBORO_C_CXX_FLAGS_RELWITHDEBINFO}"  CACHE STRING "")
+set(OBORO_USER_C_CXX_FLAGS_RELEASE "${OBORO_C_CXX_FLAGS_RELEASE}"  CACHE STRING "")
+set(OBORO_USER_C_CXX_FLAGS_MINSIZEREL "${OBORO_C_CXX_FLAGS_MINSIZEREL}"  CACHE STRING "")
+set(OBORO_USER_C_FLAGS "${OBORO_C_FLAGS}"  CACHE STRING "")
+set(OBORO_USER_C_FLAGS_DEBUG "${OBORO_C_FLAGS_DEBUG}"  CACHE STRING "")
+set(OBORO_USER_C_FLAGS_RELWITHDEBINFO "${OBORO_C_FLAGS_RELWITHDEBINFO}"  CACHE STRING "")
+set(OBORO_USER_C_FLAGS_RELEASE "${OBORO_C_FLAGS_RELEASE}"  CACHE STRING "")
+set(OBORO_USER_C_FLAGS_MINSIZEREL "${OBORO_C_FLAGS_MINSIZEREL}"  CACHE STRING "")
+set(OBORO_USER_CXX_FLAGS "${OBORO_CXX_FLAGS}"  CACHE STRING "")
+set(OBORO_USER_CXX_FLAGS_DEBUG "${OBORO_CXX_FLAGS_DEBUG}"  CACHE STRING "")
+set(OBORO_USER_CXX_FLAGS_RELWITHDEBINFO "${OBORO_CXX_FLAGS_RELWITHDEBINFO}"  CACHE STRING "")
+set(OBORO_USER_CXX_FLAGS_RELEASE "${OBORO_CXX_FLAGS_RELEASE}"  CACHE STRING "")
+set(OBORO_USER_CXX_FLAGS_MINSIZEREL "${OBORO_CXX_FLAGS_MINSIZEREL}"  CACHE STRING "")
 # ------------------------------------------------------------------------------
 if    ("None" STREQUAL CMAKE_BUILD_TYPE OR NOT CMAKE_BUILD_TYPE)
-elseif("Debug" STREQUAL CMAKE_BUILD_TYPE OR "RelWithDebInfo" STREQUAL CMAKE_BUILD_TYPE)
-  set(OBORO_C_FLAGS "${OBORO_C_CXX_FLAGS_DEBUG} ${OBORO_C_FLAGS}")
-  set(OBORO_CXX_FLAGS "${OBORO_C_CXX_FLAGS_DEBUG} ${OBORO_CXX_FLAGS}")
-elseif("Release" STREQUAL CMAKE_BUILD_TYPE OR "MinSizeRel" STREQUAL CMAKE_BUILD_TYPE)
-  set(OBORO_C_FLAGS "${OBORO_C_CXX_FLAGS_RELEASE} ${OBORO_C_FLAGS}")
-  set(OBORO_CXX_FLAGS "${OBORO_C_CXX_FLAGS_RELEASE} ${OBORO_CXX_FLAGS}")
+elseif("Debug" STREQUAL CMAKE_BUILD_TYPE)
+  set(OBORO_C_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_DEBUG} ${OBORO_USER_C_FLAGS} ${OBORO_USER_C_FLAGS_DEBUG}")
+  set(OBORO_CXX_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_DEBUG} ${OBORO_USER_CXX_FLAGS} ${OBORO_USER_CXX_FLAGS_DEBUG}")
+elseif("RelWithDebInfo" STREQUAL CMAKE_BUILD_TYPE)
+  set(OBORO_C_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_RELWITHDEBINFO} ${OBORO_USER_C_FLAGS} ${OBORO_USER_C_FLAGS_RELWITHDEBINFO}")
+  set(OBORO_CXX_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_RELWITHDEBINFO} ${OBORO_USER_CXX_FLAGS} ${OBORO_USER_CXX_FLAGS_RELWITHDEBINFO}")
+elseif("Release" STREQUAL CMAKE_BUILD_TYPE)
+  set(OBORO_C_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_RELEASE} ${OBORO_USER_C_FLAGS} ${OBORO_USER_C_FLAGS_RELEASE}")
+  set(OBORO_CXX_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_RELEASE} ${OBORO_USER_CXX_FLAGS} ${OBORO_USER_CXX_FLAGS_RELEASE}")
+elseif("MinSizeRel" STREQUAL CMAKE_BUILD_TYPE)
+  set(OBORO_C_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_MINSIZEREL} ${OBORO_USER_C_FLAGS} ${OBORO_USER_C_FLAGS_MINSIZEREL}")
+  set(OBORO_CXX_FLAGS "${OBORO_USER_C_CXX_FLAGS} ${OBORO_USER_C_CXX_FLAGS_MINSIZEREL} ${OBORO_USER_CXX_FLAGS} ${OBORO_USER_CXX_FLAGS_MINSIZEREL}")
 endif()
 # ##############################################################################
 # root  ========================================================================
@@ -79,13 +161,13 @@ if (NOT (CMAKE_C_COMPILER_ID STREQUAL CMAKE_CXX_COMPILER_ID))
   message(FATAL_ERROR "Requires C_COMPILER(${CMAKE_C_COMPILER_ID}) == CXX_COMPILER(${CMAKE_CXX_COMPILER_ID})")
 endif()
 # ##############################################################################
-# libraries ====================================================================
+# libraries  ===================================================================
 # lua --------------------------------------------------------------------------
 find_package(Lua51 REQUIRED)
-# boost ------------------------------------------------------------------------
+# boost  -----------------------------------------------------------------------
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.56.0 REQUIRED COMPONENTS)
-# ltdl -------------------------------------------------------------------------
+# ltdl  ------------------------------------------------------------------------
 find_path(LTDL_INCLUDE_DIR ltdl.h)
 find_library(LTDL_LIBRARIES NAMES ltdl)
 # Thread  ----------------------------------------------------------------------
@@ -125,13 +207,13 @@ list(APPEND OBORO_LIBRARIES ${CMAKE_DL_LIBS})
 list(REMOVE_DUPLICATES OBORO_LIBRARIES)
 list(REMOVE_ITEM OBORO_LIBRARIES "")
 # ##############################################################################
-# extra ========================================================================
+# extra  =======================================================================
 # ------------------------------------------------------------------------------
 configure_file(${abs_top_srcdir}/config.h.cmake config.h @ONLY)
 configure_file(${abs_top_srcdir}/oboro.pc.in oboro.pc @ONLY)
 configure_file(${abs_top_srcdir}/Doxyfile.in Doxyfile @ONLY)
 # ##############################################################################
-# for uninstall ================================================================
+# uninstall  ===================================================================
 # ------------------------------------------------------------------------------
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in cmake_uninstall.cmake
@@ -141,13 +223,13 @@ add_custom_target(uninstall
   ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
   )
 # ##############################################################################
-# pkgconfig ====================================================================
+# pkgconfig  ===================================================================
 # ------------------------------------------------------------------------------
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/oboro.pc
   DESTINATION lib/pkgconfig)
 # ##############################################################################
-# test =========================================================================
+# test  ========================================================================
 # ------------------------------------------------------------------------------
 if(OBORO_ENABLE_TEST)
   # ============================================================================
@@ -192,12 +274,13 @@ if(OBORO_ENABLE_TEST)
   list(APPEND TEST_ENV "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}")
   list(APPEND TEST_ENV "TOP_SRCDIR=${abs_top_srcdir}")
   list(APPEND TEST_ENV "TOP_BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
-  list(APPEND TEST_ENV "SPLINT=${SPLINT} ${SPLINT_FLAGS}")
+  list(APPEND TEST_ENV "SPLINT=${SPLINT} ${SPLINT_FLAGS} -DOBORO_EXPORTS")
   list(APPEND TEST_ENV "CPPLINT=${CPPLINT} ${CPPLINT_FLAGS}")
 endif()
 # ##############################################################################
-# subdirectory =================================================================
+# subdirectory  ================================================================
 # ------------------------------------------------------------------------------
 add_subdirectory(include)
 add_subdirectory(src)
+#add_subdirectory(example)
 add_subdirectory(test)

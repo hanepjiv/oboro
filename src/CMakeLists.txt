@@ -26,7 +26,7 @@ add_definitions(-DHAVE_CONFIG_H)
 include_directories(${OBORO_INCLUDE_DIRS})
 link_directories(${OBORO_LIBRARY_DIRS})
 # ==============================================================================
-# oboro ------------------------------------------------------------------------
+# oboro  --------------------------------------------------------------------
 set(OBORO_SOURCES
   ${abs_top_srcdir}/include/oboro/call.h
   ${abs_top_srcdir}/include/oboro/declspec.h
@@ -40,6 +40,7 @@ set(OBORO_SOURCES
 
   ${abs_top_srcdir}/include/oboro/oboro.hh
 
+
   ${abs_top_srcdir}/src/oboro.cc
   )
 # ------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ target_link_libraries(oboro
 set_target_properties(oboro
   PROPERTIES
   OUTPUT_NAME oboro
-  VERSION ${OBORO_RELEASE}
+  VERSION ${OBORO_VERSION}
   SOVERSION ${OBORO_SOVERSION}
   COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
   )
