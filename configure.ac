@@ -45,7 +45,7 @@ LT_INIT([static shared win32-dll dlopen])
 LTDL_INIT
 # ------------------------------------------------------------------------------
 # boost
-BOOST_VERSION=1.55.0
+BOOST_VERSION=1.56.0
 AX_BOOST_BASE([$BOOST_VERSION],
 	[],
 	[AC_MSG_ERROR([Boost C++ libraries not found!])])
