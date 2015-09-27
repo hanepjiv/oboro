@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/06/07
+ *  @date 2015/09/26
  */
 
 
@@ -52,9 +52,11 @@
 
 // #############################################################################
 namespace oboro {
+
 // =============================================================================
 using NIL = struct {};
 // =============================================================================
+inline void     print(lua_State* L, int a_index) noexcept;
 inline void     printStack(lua_State* L) noexcept;
 // -----------------------------------------------------------------------------
 template <typename T>
@@ -82,34 +84,38 @@ inline void     newmetatable(lua_State* L, const char* a_name,
 // #############################################################################
 namespace oboro {
 // =============================================================================
+inline void     print(lua_State* L, int i) noexcept {
+  int t = lua_type(L, i);
+  std::printf("% 3d / % 3d : %10s : ",
+              i, i - lua_gettop(L) - 1, lua_typename(L, t));
+  switch (t) {
+    case LUA_TNONE:                                                     break;
+    case LUA_TNIL:                                                      break;
+    case LUA_TBOOLEAN:       std::printf("%d", lua_toboolean(L, i));    break;
+    case LUA_TLIGHTUSERDATA: std::printf("%p", lua_touserdata(L, i));   break;
+    case LUA_TNUMBER:        std::printf("%+lf", lua_tonumber(L, i));   break;
+    case LUA_TSTRING:        std::printf("[[%s]]", lua_tostring(L, i)); break;
+    case LUA_TTABLE:         std::printf("%p", lua_topointer(L, i));    break;
+    case LUA_TFUNCTION:
+      if (lua_iscfunction(L, i)) {
+        std::printf("C Function   : %p", lua_tocfunction(L, i));
+      } else {
+        std::printf("Lua Function : %p", lua_topointer(L, i));
+      }                                                                 break;
+    case LUA_TUSERDATA:      std::printf("%p", lua_touserdata(L, i));   break;
+    case LUA_TTHREAD:        std::printf("%p", lua_tothread(L, i));     break;
+    default:                                                            break;
+  }
+  std::printf("\n");
+}
+// =============================================================================
 inline void     printStack(lua_State* L) noexcept {
   OBORO_TRACE_DEBUG("oboro::printStack");
   std::printf("// ========================================================= \n"
               "// Lua Stack  ----------------------------------------------\n");
   int n = lua_gettop(L);
   for (int i = n; i >= 1; --i) {
-    int t = lua_type(L, i);
-    std::printf("% 3d / % 3d : %10s : ", i, i - n - 1, lua_typename(L, t));
-    switch (t) {
-      case LUA_TNONE:                                                     break;
-      case LUA_TNIL:                                                      break;
-      case LUA_TBOOLEAN:       std::printf("%d", lua_toboolean(L, i));    break;
-      case LUA_TLIGHTUSERDATA: std::printf("%p", lua_touserdata(L, i));   break;
-      case LUA_TNUMBER:        std::printf("%+lf", lua_tonumber(L, i));   break;
-      case LUA_TSTRING:        std::printf("[[%s]]", lua_tostring(L, i)); break;
-      case LUA_TTABLE:         std::printf("%p", lua_topointer(L, i));    break;
-      case LUA_TFUNCTION:
-        if (lua_iscfunction(L, i)) {
-          std::printf("C Function   : %p", lua_tocfunction(L, i));
-        } else {
-          std::printf("Lua Function : %p", lua_topointer(L, i));
-        }
-        break;
-      case LUA_TUSERDATA:      std::printf("%p", lua_touserdata(L, i));   break;
-      case LUA_TTHREAD:        std::printf("%p", lua_tothread(L, i));     break;
-      default:                                                            break;
-    }
-    std::printf("\n");
+    print(L, i);
   }
 }
 // =============================================================================
@@ -295,6 +301,7 @@ inline void     newmetatable(lua_State* L, const char* a_name) noexcept {
                          "The registry already has \"%s\"", a_name);
   }
 }
+
 }  // namespace oboro
 
 
