@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/06/16
+ *  @date 2015/09/29
  */
 
 
@@ -71,7 +71,7 @@
 #ifdef OBORO_DEBUG
 /* -------------------------------------------------------------------------- */
 # if !defined(OBORO_VERBOSITY)
-#   define OBORO_VERBOSITY              OBORO_VERBOSITY_DEFAULT
+#   define OBORO_VERBOSITY              OBORO_VERBOSITY_DEBUG
 # endif
 /* ========================================================================== */
 # ifdef __cplusplus
