@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/09/29
+ *  @date 2015/10/23
  */
 
 
@@ -226,16 +226,16 @@ inline void     push(lua_State* L, void* a_Value) noexcept {
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void     push(lua_State* L, lua_Number a_Value) noexcept {
-  OBORO_TRACE_DEBUG("oboro::push<lua_Number>");
-  OBORO_ASSERT(L, "ERROR! oboro::push<lua_Number>: invalid lua_State");
+inline void     push(lua_State* L, double a_Value) noexcept {
+  OBORO_TRACE_DEBUG("oboro::push<double>");
+  OBORO_ASSERT(L, "ERROR! oboro::push<double>: invalid lua_State");
   lua_pushnumber(L, a_Value);
 }
 // -----------------------------------------------------------------------------
 template <>
-inline void     push(lua_State* L, lua_Integer a_Value) noexcept {
-  OBORO_TRACE_DEBUG("oboro::push<lua_Integer>");
-  OBORO_ASSERT(L, "ERROR! oboro::push<lua_Integer>: invalid lua_State");
+inline void     push(lua_State* L, int a_Value) noexcept {
+  OBORO_TRACE_DEBUG("oboro::push<int>");
+  OBORO_ASSERT(L, "ERROR! oboro::push<int>: invalid lua_State");
   lua_pushinteger(L, a_Value);
 }
 // -----------------------------------------------------------------------------
