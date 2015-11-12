@@ -36,7 +36,7 @@ if(OBORO_ENABLE_TEST)
     list(APPEND OBORO_TEST_TEST_EXE splint-test)
   endif()
   # cpplint  -------------------------------------------------------------------
-  if(PYTHON2)
+  if(PYTHON)
     add_test(cpplint-test ${CPPLINT_SH})
     list(APPEND OBORO_TEST_TEST_EXE cpplint-test)
   endif()

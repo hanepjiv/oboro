@@ -82,7 +82,7 @@ if(OBORO_ENABLE_TEST)
     list(APPEND OBORO_SRC_TEST_EXE splint-src)
   endif()
   # cpplint  -------------------------------------------------------------------
-  if(PYTHON2)
+  if(PYTHON)
     add_test(cpplint-src ${CPPLINT_SH})
     list(APPEND OBORO_SRC_TEST_EXE cpplint-src)
   endif()

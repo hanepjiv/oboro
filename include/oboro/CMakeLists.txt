@@ -58,7 +58,7 @@ if(OBORO_ENABLE_TEST)
     list(APPEND OBORO_SRC_TEST_EXE splint-include-oboro)
   endif()
   # cpplint  -------------------------------------------------------------------
-  if(PYTHON2)
+  if(PYTHON)
     add_test(cpplint-include-oboro ${CPPLINT_SH})
     list(APPEND OBORO_SRC_TEST_EXE cpplint-include-oboro)
   endif()

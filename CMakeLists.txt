@@ -252,14 +252,14 @@ if(OBORO_ENABLE_TEST)
   set(SPLINT_SH /bin/env sh ${CMAKE_CURRENT_BINARY_DIR}/tools/et-splint/splint.sh
    )
   # cpplint  -------------------------------------------------------------------
-  find_program(PYTHON2 python2)
-  if(NOT PYTHON2)
-    message(FATAL_ERROR "Test feature requires python2.")
+  find_program(PYTHON python)
+  if(NOT PYTHON)
+    message(FATAL_ERROR "Test feature requires python.")
   endif()
-  message(STATUS "${PYTHON2}")
+  message(STATUS "${PYTHON}")
   configure_file(${abs_top_srcdir}/tools/et-cpplint/cpplint.sh.in
     tools/et-cpplint/cpplint.sh @ONLY)
-  set(CPPLINT "python2 ${abs_top_srcdir}/tools/et-cpplint/cpplint.py"
+  set(CPPLINT "python ${abs_top_srcdir}/tools/et-cpplint/cpplint.py"
    )
   set(CPPLINT_FLAGS "")
   set(CPPLINT_SH /bin/env sh ${CMAKE_CURRENT_BINARY_DIR}/tools/et-cpplint/cpplint.sh
