@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/11/04
+ *  @date 2015/11/17
  */
 
 
@@ -133,6 +133,7 @@ inline void     printStack(lua_State* L) noexcept {
   }
 }
 // =============================================================================
+// -----------------------------------------------------------------------------
 template <>
 inline bool     is<int, false>(lua_State* L, int a_Index) {
   OBORO_TRACE_DEBUG("oboro::is<int, false>");
@@ -163,6 +164,23 @@ inline bool     is<lua_Number, true>(lua_State* L, int a_Index) {
   OBORO_ASSERT(L, "ERROR! oboro::is<lua_Number, true>: invalid lua_State");
   if (!is<lua_Number, false>(L, a_Index)) {
     throw std::runtime_error("ERROR!: oboro::is<lua_Number, true>");
+  }
+  return true;
+}
+// -----------------------------------------------------------------------------
+template <>
+inline bool     is<bool, false>(lua_State* L, int a_Index) {
+  OBORO_TRACE_DEBUG("oboro::is<bool, false>");
+  OBORO_ASSERT(L, "ERROR! oboro::is<bool, false>: invalid lua_State");
+  return lua_isboolean(L, a_Index);
+}
+// -----------------------------------------------------------------------------
+template <>
+inline bool     is<bool, true>(lua_State* L, int a_Index) {
+  OBORO_TRACE_DEBUG("oboro::is<bool, true>");
+  OBORO_ASSERT(L, "ERROR! oboro::is<bool, true>: invalid lua_State");
+  if (!is<bool, false>(L, a_Index)) {
+    throw std::runtime_error("ERROR!: oboro::is<bool, true>");
   }
   return true;
 }
@@ -398,6 +416,14 @@ inline lua_Number get(lua_State* L, int i) {
   OBORO_ASSERT(L, "ERROR! oboro::get<lua_Number>: invalid lua_State");
   is<lua_Number>(L, i);
   return lua_tonumber(L, i);
+}
+// -----------------------------------------------------------------------------
+template <>
+inline bool      get(lua_State* L, int i) {
+  OBORO_TRACE_DEBUG("oboro::get<bool>");
+  OBORO_ASSERT(L, "ERROR! oboro::get<bool>: invalid lua_State");
+  is<bool>(L, i);
+  return lua_toboolean(L, i);
 }
 // -----------------------------------------------------------------------------
 template <>
