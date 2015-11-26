@@ -101,8 +101,8 @@ int main(int argc, char* argv[]) {
                       "    print([[hello]], c_func(1, 2))\n"
                       "end\n"
                       "return _M")) {
-      std::fprintf(stderr, "ERROR!: luaL_dostring\n");
-      throw std::runtime_error("ERROR!");
+      ::std::fprintf(stderr, "ERROR!: luaL_dostring\n");
+      throw ::std::runtime_error("ERROR!");
     }
     lua_setglobal(L, "Hello");
     {
@@ -110,8 +110,8 @@ int main(int argc, char* argv[]) {
       lua_pushstring(L, "hello");
       lua_rawget(L, -2);
       if (lua_pcall(L, 0, 0, 0)) {
-        std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
-        throw std::runtime_error("ERROR!");
+        ::std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
+        throw ::std::runtime_error("ERROR!");
       }
     }
   }

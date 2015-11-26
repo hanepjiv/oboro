@@ -80,12 +80,12 @@ extern "C" {
   }
   // ===========================================================================
   int c_index(lua_State* L) noexcept {
-    std::printf("c_index\n");
+    ::std::printf("c_index\n");
     oboro::printStack(L);
     int** ppi = static_cast<int**>(lua_touserdata(L, 1));
     const char* key = lua_tostring(L, 2);
     lua_settop(L, 0);
-    if (0 == std::strcmp("test", key)) {
+    if (0 == ::std::strcmp("test", key)) {
       lua_pushnumber(L, **ppi);
     } else {
       lua_pushnil(L);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
   // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::01");
     {
-      oboro::newmetatable(L, "OBORO", std::make_pair("_test", "TEST"));
+      oboro::newmetatable(L, "OBORO", ::std::make_pair("_test", "TEST"));
       lua_pop(L, 1);
     }
     OBORO_ASSERT(0 == lua_gettop(L), "ERROR!");
@@ -127,9 +127,9 @@ int main(int argc, char* argv[]) {
       oboro::newtable(L, 1, -1, 1.0, -1.0, "test");
       {
         oboro::newmetatable(L, "OBORO",
-                            std::make_pair("_test", "TEST"),
-                            std::make_pair("_num", 10),
-                            std::make_pair("_cfunc", &c_func));
+                            ::std::make_pair("_test", "TEST"),
+                            ::std::make_pair("_num", 10),
+                            ::std::make_pair("_cfunc", &c_func));
         lua_setmetatable(L, -2);
 
         OBORO_ASSERT(LUA_TNIL != luaL_getmetafield(L, -1, "_num"), "ERROR!");
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
       int i = 12;
       *ppi = &i;
       {
-        oboro::newmetatable(L, "TEST03", std::make_pair("__index", c_index));
+        oboro::newmetatable(L, "TEST03", ::std::make_pair("__index", c_index));
         lua_setmetatable(L, -2);
       }
       oboro::printStack(L);
@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
     {
       oboro::newtable(L,
                       1, 2.0, "test",
-                      std::make_pair("test", 1), std::make_pair("_0", 0));
+                      ::std::make_pair("test", 1), ::std::make_pair("_0", 0));
       lua_pushnil(L);
       for (int idx = -2; 0 != lua_next(L, idx); --idx) {
         lua_insert(L, -2);
@@ -195,8 +195,8 @@ int main(int argc, char* argv[]) {
       lua_pushnumber(L, 1);
       lua_pushnumber(L, 2);
       if (lua_pcall(L, 2, 1, 0)) {
-        std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
-        throw std::runtime_error("ERROR!");
+        ::std::fprintf(stderr, "ERROR!: lua_pcall: %s\n", lua_tostring(L, 1));
+        throw ::std::runtime_error("ERROR!");
       }
       oboro::printStack(L);
       lua_pop(L, 1);

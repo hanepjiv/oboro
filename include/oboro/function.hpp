@@ -59,7 +59,7 @@ int oboroClosure(lua_State* L) {
   lua_CFunction f =
       reinterpret_cast<lua_CFunction>(lua_touserdata(L, lua_upvalueindex(1)));
 # pragma GCC diagnostic pop
-  std::printf("%p\n", f);
+  ::std::printf("%p\n", f);
   return f(L);
 }
 }  // namespace oboro
