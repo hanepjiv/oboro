@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/11/26
+ *  @date 2015/11/30
  */
 
 
@@ -47,6 +47,7 @@
 #include <boost/scope_exit.hpp>
 
 #include <cstdio>
+#include <typeinfo>
 #include <utility>
 #include <stdexcept>
 
@@ -407,7 +408,7 @@ inline int       get(lua_State* L, int i) {
   OBORO_TRACE_DEBUG("oboro::get<int>");
   OBORO_ASSERT(L, "ERROR! oboro::get<int>: invalid lua_State");
   is<lua_Number>(L, i);
-  return lua_tointeger(L, i);
+  return static_cast<int>(lua_tointeger(L, i));
 }
 // -----------------------------------------------------------------------------
 template <>
@@ -478,7 +479,14 @@ template <class T, bool POP>
 inline T         gettable(lua_State* L, int a_TblIdx, int a_Index) {
   OBORO_TRACE_DEBUG("oboro::gettable<T, POP>(..., a_Index)");
   OBORO_ASSERT(L,        "ERROR! oboro::gettable<T, POP>(..., a_Index)");
-  return gettableImpl<T, POP>()(L, a_TblIdx, a_Index);
+  try {
+    return gettableImpl<T, POP>()(L, a_TblIdx, a_Index);
+  } catch (...) {
+    ::std::fprintf(stderr, "ERROR!: oboro::gettable<%s, %s>(%p, %d, %d);\n",
+                   typeid(T).name(), (POP ? "true" : "false"),
+                   L, a_TblIdx, a_TblIdx);
+    throw;
+  }
 }
 // -----------------------------------------------------------------------------
 // UNDEFINED
@@ -490,7 +498,14 @@ inline T         gettable(lua_State* L, int a_TblIdx, const char* a_Key) {
   OBORO_TRACE_DEBUG("oboro::gettable<T, false>(..., a_Key)");
   OBORO_ASSERT(L,        "ERROR! oboro::gettable<T, false>(..., a_Key)");
   OBORO_ASSERT(a_Key,    "ERROR! oboro::gettable<T, false>(..., a_Key)");
-  return gettableImpl<T, POP>()(L, a_TblIdx, a_Key);
+  try {
+    return gettableImpl<T, POP>()(L, a_TblIdx, a_Key);
+  } catch (...) {
+    ::std::fprintf(stderr, "ERROR!: oboro::gettable<%s, %s>(%p, %d, \"%s\");\n",
+                   typeid(T).name(), (POP ? "true" : "false"),
+                   L, a_TblIdx, a_Key);
+    throw;
+  }
 }
 // -----------------------------------------------------------------------------
 // UNDEFINED
