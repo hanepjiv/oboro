@@ -29,7 +29,7 @@
 set(OBORO_INCLUDE_OBORO_SRC "${abs_top_srcdir}/include/oboro")
 set(OBORO_INCLUDE_OBORO_DEST "include/oboro")
 # ------------------------------------------------------------------------------
-set(oboro_HEADERS
+set(OBORO_HEADERS
   ${OBORO_INCLUDE_OBORO_SRC}/call.h
   ${OBORO_INCLUDE_OBORO_SRC}/declspec.h
   ${OBORO_INCLUDE_OBORO_SRC}/begin.h
@@ -45,7 +45,7 @@ set(oboro_HEADERS
   )
 # ------------------------------------------------------------------------------
 install(FILES
-  ${oboro_HEADERS}
+  ${OBORO_HEADERS}
   DESTINATION ${OBORO_INCLUDE_OBORO_DEST})
 # ==============================================================================
 # tests  -----------------------------------------------------------------------
