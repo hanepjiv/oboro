@@ -28,19 +28,6 @@ link_directories(${OBORO_LIBRARY_DIRS})
 # ==============================================================================
 # oboro  --------------------------------------------------------------------
 set(OBORO_SOURCES
-  ${abs_top_srcdir}/include/oboro/call.h
-  ${abs_top_srcdir}/include/oboro/declspec.h
-  ${abs_top_srcdir}/include/oboro/begin.h
-
-  ${abs_top_srcdir}/include/oboro/debug.h
-
-  ${abs_top_srcdir}/include/oboro/oboro.hpp
-  ${abs_top_srcdir}/include/oboro/module.hpp
-  ${abs_top_srcdir}/include/oboro/function.hpp
-
-  ${abs_top_srcdir}/include/oboro/oboro.hh
-
-
   ${abs_top_srcdir}/src/oboro.cc
   )
 # ------------------------------------------------------------------------------
@@ -49,7 +36,7 @@ target_link_libraries(oboro
   )
 set_target_properties(oboro
   PROPERTIES
-  OUTPUT_NAME oboro
+  OUTPUT_NAME "oboro"
   VERSION ${OBORO_VERSION}
   SOVERSION ${OBORO_SOVERSION}
   COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
@@ -60,7 +47,7 @@ target_link_libraries(oboro-static
   )
 set_target_properties(oboro-static
   PROPERTIES
-  OUTPUT_NAME oboro
+  OUTPUT_NAME "oboro"
   COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
   )
 # ------------------------------------------------------------------------------

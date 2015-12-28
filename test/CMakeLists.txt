@@ -41,18 +41,10 @@ if(OBORO_ENABLE_TEST)
     list(APPEND OBORO_TEST_TEST_EXE cpplint-test)
   endif()
   # ----------------------------------------------------------------------------
-  set(test00_SRCS
-    ${abs_top_srcdir}/include/oboro/debug.h
-
-    ${abs_top_srcdir}/include/oboro/oboro.hpp
-    ${abs_top_srcdir}/include/oboro/module.hpp
-    ${abs_top_srcdir}/include/oboro/function.hpp
-
-    ${abs_top_srcdir}/include/oboro/oboro.hh
-
+  set(test00_SOURCES
     ${abs_top_srcdir}/test/test00.cc
     )
-  add_executable(test00 ${test00_SRCS})
+  add_executable(test00 ${test00_SOURCES})
   target_link_libraries(test00 ${OBORO_LIBRARIES})
   set_target_properties(test00
     PROPERTIES
@@ -61,18 +53,10 @@ if(OBORO_ENABLE_TEST)
   add_test(test00 test00)
   list(APPEND OBORO_TEST_TEST_EXE test00)
   # ----------------------------------------------------------------------------
-  set(test01_SRCS
-    ${abs_top_srcdir}/include/oboro/debug.h
-
-    ${abs_top_srcdir}/include/oboro/oboro.hpp
-    ${abs_top_srcdir}/include/oboro/module.hpp
-    ${abs_top_srcdir}/include/oboro/function.hpp
-
-    ${abs_top_srcdir}/include/oboro/oboro.hh
-
+  set(test01_SOURCES
     ${abs_top_srcdir}/test/test01.cc
     )
-  add_executable(test01 ${test01_SRCS})
+  add_executable(test01 ${test01_SOURCES})
   target_link_libraries(test01 ${OBORO_LIBRARIES})
   set_target_properties(test01
     PROPERTIES
