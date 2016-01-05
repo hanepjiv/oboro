@@ -51,21 +51,21 @@ install(FILES
 # tests  -----------------------------------------------------------------------
 if(OBORO_ENABLE_TEST)
   # ----------------------------------------------------------------------------
-  set(OBORO_SRC_TEST_EXE)
+  set(OBORO_INCLUDE_OBORO_TEST_EXE)
   # splint  --------------------------------------------------------------------
   if(SPLINT)
     add_test(splint-include-oboro ${SPLINT_SH})
-    list(APPEND OBORO_SRC_TEST_EXE splint-include-oboro)
+    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE splint-include-oboro)
   endif()
   # cpplint  -------------------------------------------------------------------
   if(PYTHON)
     add_test(cpplint-include-oboro ${CPPLINT_SH})
-    list(APPEND OBORO_SRC_TEST_EXE cpplint-include-oboro)
+    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE cpplint-include-oboro)
   endif()
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${abs_top_srcdir}/include/oboro")
+  list(APPEND TEST_ENV_ "SRCDIR=${OBORO_INCLUDE_OBORO_SRC}")
   list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
-  set_tests_properties(${OBORO_SRC_TEST_EXE}
+  set_tests_properties(${OBORO_INCLUDE_OBORO_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")
 endif()
