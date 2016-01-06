@@ -26,26 +26,21 @@
 
 # ==============================================================================
 # oboro ------------------------------------------------------------------------
-set(OBORO_INCLUDE_OBORO_SRC "${abs_top_srcdir}/include/oboro")
-set(OBORO_INCLUDE_OBORO_DEST "include/oboro")
-# ------------------------------------------------------------------------------
-set(OBORO_HEADERS
-  ${OBORO_INCLUDE_OBORO_SRC}/call.h
-  ${OBORO_INCLUDE_OBORO_SRC}/declspec.h
-  ${OBORO_INCLUDE_OBORO_SRC}/begin.h
-
-  ${OBORO_INCLUDE_OBORO_SRC}/debug.h
-
-  ${OBORO_INCLUDE_OBORO_SRC}/initializer.hpp
-  ${OBORO_INCLUDE_OBORO_SRC}/oboro.hpp
-  ${OBORO_INCLUDE_OBORO_SRC}/module.hpp
-  ${OBORO_INCLUDE_OBORO_SRC}/function.hpp
-
-  ${OBORO_INCLUDE_OBORO_SRC}/oboro.hh
-  )
-# ------------------------------------------------------------------------------
+file(RELATIVE_PATH OBORO_INCLUDE_OBORO_DEST
+  ${abs_top_srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
 install(FILES
-  ${OBORO_HEADERS}
+  call.h
+  declspec.h
+  begin.h
+
+  debug.h
+
+  initializer.hpp
+  oboro.hpp
+  module.hpp
+  function.hpp
+
+  oboro.hh
   DESTINATION ${OBORO_INCLUDE_OBORO_DEST})
 # ==============================================================================
 # tests  -----------------------------------------------------------------------
@@ -54,17 +49,17 @@ if(OBORO_ENABLE_TEST)
   set(OBORO_INCLUDE_OBORO_TEST_EXE)
   # splint  --------------------------------------------------------------------
   if(SPLINT)
-    add_test(splint-include-oboro ${SPLINT_SH})
-    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE splint-include-oboro)
+    add_test(include_oboro-splint ${SPLINT_SH})
+    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE include_oboro-splint)
   endif()
   # cpplint  -------------------------------------------------------------------
   if(PYTHON)
-    add_test(cpplint-include-oboro ${CPPLINT_SH})
-    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE cpplint-include-oboro)
+    add_test(include_oboro-cpplint ${CPPLINT_SH})
+    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE include_oboro-cpplint)
   endif()
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${OBORO_INCLUDE_OBORO_SRC}")
+  list(APPEND TEST_ENV_ "SRCDIR=${CMAKE_CURRENT_SOURCE_DIR}")
   list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_INCLUDE_OBORO_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")

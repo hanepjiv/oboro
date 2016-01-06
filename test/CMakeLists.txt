@@ -32,17 +32,17 @@ if(OBORO_ENABLE_TEST)
   set(OBORO_TEST_TEST_EXE)
   # splint  --------------------------------------------------------------------
   if(SPLINT)
-    add_test(splint-test ${SPLINT_SH})
-    list(APPEND OBORO_TEST_TEST_EXE splint-test)
+    add_test(test-splint ${SPLINT_SH})
+    list(APPEND OBORO_TEST_TEST_EXE test-splint)
   endif()
   # cpplint  -------------------------------------------------------------------
   if(PYTHON)
-    add_test(cpplint-test ${CPPLINT_SH})
-    list(APPEND OBORO_TEST_TEST_EXE cpplint-test)
+    add_test(test-cpplint ${CPPLINT_SH})
+    list(APPEND OBORO_TEST_TEST_EXE test-cpplint)
   endif()
   # ----------------------------------------------------------------------------
   set(test00_SOURCES
-    ${abs_top_srcdir}/test/test00.cc
+    test00.cc
     )
   add_executable(test00 ${test00_SOURCES})
   target_link_libraries(test00 ${OBORO_LIBRARIES})
@@ -50,11 +50,11 @@ if(OBORO_ENABLE_TEST)
     PROPERTIES
     COMPILE_FLAGS "${OBORO_CXX_FLAGS}"
     )
-  add_test(test00 test00)
-  list(APPEND OBORO_TEST_TEST_EXE test00)
+  add_test(test-test00 test00)
+  list(APPEND OBORO_TEST_TEST_EXE test-test00)
   # ----------------------------------------------------------------------------
   set(test01_SOURCES
-    ${abs_top_srcdir}/test/test01.cc
+    test01.cc
     )
   add_executable(test01 ${test01_SOURCES})
   target_link_libraries(test01 ${OBORO_LIBRARIES})
@@ -62,12 +62,12 @@ if(OBORO_ENABLE_TEST)
     PROPERTIES
     COMPILE_FLAGS "${OBORO_CXX_FLAGS}"
     )
-  add_test(test01 test01)
-  list(APPEND OBORO_TEST_TEST_EXE test01)
+  add_test(test-test01 test01)
+  list(APPEND OBORO_TEST_TEST_EXE test-test01)
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  set(TEST_ENV_ "${TEST_ENV_};SRCDIR=${abs_top_srcdir}/test")
-  set(TEST_ENV_ "${TEST_ENV_};BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
+  list(APPEND TEST_ENV_ "SRCDIR=${CMAKE_CURRENT_SOURCE_DIR}")
+  list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_TEST_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")
 endif()

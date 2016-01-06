@@ -28,7 +28,7 @@ link_directories(${OBORO_LIBRARY_DIRS})
 # ==============================================================================
 # oboro  --------------------------------------------------------------------
 set(OBORO_SOURCES
-  ${abs_top_srcdir}/src/oboro.cc
+  oboro.cc
   )
 # ------------------------------------------------------------------------------
 add_library(oboro SHARED ${OBORO_SOURCES})
@@ -65,17 +65,17 @@ if(OBORO_ENABLE_TEST)
   set(OBORO_SRC_TEST_EXE)
   # splint  --------------------------------------------------------------------
   if(SPLINT)
-    add_test(splint-src ${SPLINT_SH})
-    list(APPEND OBORO_SRC_TEST_EXE splint-src)
+    add_test(src-splint ${SPLINT_SH})
+    list(APPEND OBORO_SRC_TEST_EXE src-splint)
   endif()
   # cpplint  -------------------------------------------------------------------
   if(PYTHON)
-    add_test(cpplint-src ${CPPLINT_SH})
-    list(APPEND OBORO_SRC_TEST_EXE cpplint-src)
+    add_test(src-cpplint ${CPPLINT_SH})
+    list(APPEND OBORO_SRC_TEST_EXE src-cpplint)
   endif()
   # environment  ---------------------------------------------------------------
   set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${abs_top_srcdir}/src")
+  list(APPEND TEST_ENV_ "SRCDIR=${CMAKE_CURRENT_SOURCE_DIR}")
   list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   set_tests_properties(${OBORO_SRC_TEST_EXE}
     PROPERTIES ENVIRONMENT "${TEST_ENV_}")
