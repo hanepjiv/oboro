@@ -74,7 +74,7 @@ if (CMAKE_COMPILER_IS_GNUCC OR
   set(OBORO_C_CXX_FLAGS_RELWITHDEBINFO  "${OBORO_C_CXX_FLAGS_RELWITHDEBINFO}")
   set(OBORO_C_CXX_FLAGS_RELEASE         "${OBORO_C_CXX_FLAGS_RELEASE}")
   set(OBORO_C_CXX_FLAGS_MINSIZEREL      "${OBORO_C_CXX_FLAGS_MINSIZEREL}")
-  set(OBORO_C_FLAGS                     "-ansi")
+  set(OBORO_C_FLAGS                     "-std=c99")
   set(OBORO_C_FLAGS_DEBUG               "")
   set(OBORO_C_FLAGS_RELWITHDEBINFO      "")
   set(OBORO_C_FLAGS_RELEASE             "")
