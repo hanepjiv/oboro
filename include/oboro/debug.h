@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2015/09/29
+ *  @date 2016/01/09
  */
 
 
@@ -321,4 +321,4 @@
 #endif  /* OBORO_DEBUG  ///////////////////////////////////////////////////// */
 
 
-#endif  /* OBORO!_DEBUG_H_ */
+#endif  /* OBORO_DEBUG_H_ */
