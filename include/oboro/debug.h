@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2016/01/09
+ *  @date 2016/01/10
  */
 
 
@@ -78,17 +78,17 @@
 #   include <cstdio>
 #   include <cstdlib>
 #   include <cstdarg>
-#   define USING_NAMESPACE_STD using namespace std
+#   define OBORO_USING_NAMESPACE_STD using namespace std
 # else  /* !__cplusplus */
 #   include <stdio.h>
 #   include <stdlib.h>
 #   include <stdarg.h>
-#   define USING_NAMESPACE_STD
+#   define OBORO_USING_NAMESPACE_STD
 # endif  /* !__cplusplus */
 /* ========================================================================== */
 # define OBORO_TRACE__(d)                                               \
   do {                                                                  \
-    USING_NAMESPACE_STD;                                                \
+    OBORO_USING_NAMESPACE_STD;                                          \
     fprintf(stderr, "%s(%i) : " d "\n", __FILE__, __LINE__);            \
     fflush(stderr);                                                     \
   } while (0)
@@ -150,7 +150,7 @@
        defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)))
 #   define OBORO_TRACEF__(fmt, ...)                                   \
   do {                                                                \
-    USING_NAMESPACE_STD;                                              \
+    OBORO_USING_NAMESPACE_STD;                                        \
     fprintf(stderr, "%s(%i) %s : " fmt "\n",                          \
             __FILE__, __LINE__, __func__, __VA_ARGS__);               \
     fflush(stderr);                                                   \
@@ -230,7 +230,7 @@
 /* ========================================================================== */
 # define OBORO_ASSERT__(c, t, d)                        \
   do { if (!(c)) {                                                    \
-      USING_NAMESPACE_STD;                                            \
+      OBORO_USING_NAMESPACE_STD;                                      \
       OBORO_TRACE_CRITICAL(t ": " d);                                 \
       abort();                                                        \
     }                                                                 \
