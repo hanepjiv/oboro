@@ -166,20 +166,7 @@ set(abs_top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
 if (NOT (CMAKE_C_COMPILER_ID STREQUAL CMAKE_CXX_COMPILER_ID))
   message(FATAL_ERROR "Requires C_COMPILER(${CMAKE_C_COMPILER_ID}) == CXX_COMPILER(${CMAKE_CXX_COMPILER_ID})")
 endif()
-# ##############################################################################
-# libraries  ===================================================================
-# lua --------------------------------------------------------------------------
-find_package(Lua51 REQUIRED)
-# boost  -----------------------------------------------------------------------
-set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.56.0 REQUIRED COMPONENTS)
-# ltdl  ------------------------------------------------------------------------
-find_path(LTDL_INCLUDE_DIR ltdl.h)
-find_library(LTDL_LIBRARIES NAMES ltdl)
-# Thread  ----------------------------------------------------------------------
-set(CMAKE_THREAD_PREFER_PTHREAD ON)
-find_package(Threads)
-set(OBORO_THREAD_LIBS ${CMAKE_THREAD_LIBS_INIT})
+
 # ##############################################################################
 # dirs  ========================================================================
 # ------------------------------------------------------------------------------
@@ -189,29 +176,48 @@ set(libdir "\${exec_prefix}/lib")
 set(includedir "\${prefix}/include")
 # ------------------------------------------------------------------------------
 set(OBORO_INCLUDE_DIRS "")
-list(APPEND OBORO_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND OBORO_INCLUDE_DIRS ${abs_top_srcdir}/include)
-list(APPEND OBORO_INCLUDE_DIRS ${LUA_INCLUDE_DIR})
-list(APPEND OBORO_INCLUDE_DIRS ${Boost_INCLUDE_DIR})
-list(APPEND OBORO_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
-list(REMOVE_DUPLICATES OBORO_INCLUDE_DIRS)
-list(REMOVE_ITEM OBORO_INCLUDE_DIRS "")
+list(APPEND OBORO_INCLUDE_DIRS  ${CMAKE_CURRENT_BINARY_DIR})
+list(APPEND OBORO_INCLUDE_DIRS  ${abs_top_srcdir}/include)
 # ------------------------------------------------------------------------------
 set(OBORO_LIBRARY_DIRS "")
-list(APPEND OBORO_LIBRARY_DIRS ${CMAKE_CURRENT_BINARY_DIR}/src)
-list(APPEND OBORO_LIBRARY_DIRS ${LUA_LIBRARY_DIR})
-list(APPEND OBORO_LIBRARY_DIRS ${Boost_LIBRARY_DIR})
-list(APPEND OBORO_LIBRARY_DIRS ${LTDL_LIBRARY_DIR})
-list(REMOVE_DUPLICATES OBORO_LIBRARY_DIRS)
-list(REMOVE_ITEM OBORO_LIBRARY_DIRS "")
+list(APPEND OBORO_LIBRARY_DIRS  ${CMAKE_CURRENT_BINARY_DIR}/src)
 # ------------------------------------------------------------------------------
 set(OBORO_LIBRARIES "")
-list(APPEND OBORO_LIBRARIES ${LUA_LIBRARIES})
-list(APPEND OBORO_LIBRARIES ${LTDL_LIBRARIES})
-list(APPEND OBORO_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
-list(APPEND OBORO_LIBRARIES ${CMAKE_DL_LIBS})
+# ##############################################################################
+# libraries  ===================================================================
+# lua --------------------------------------------------------------------------
+find_package(Lua51 REQUIRED)
+list(APPEND OBORO_INCLUDE_DIRS  ${LUA_INCLUDE_DIR})
+list(APPEND OBORO_LIBRARY_DIRS  ${LUA_LIBRARY_DIR})
+list(APPEND OBORO_LIBRARIES     ${LUA_LIBRARIES})
+# boost  -----------------------------------------------------------------------
+set(Boost_USE_MULTITHREADED ON)
+find_package(Boost 1.56.0 REQUIRED COMPONENTS)
+list(APPEND OBORO_INCLUDE_DIRS  ${Boost_INCLUDE_DIR})
+list(APPEND OBORO_LIBRARY_DIRS  ${Boost_LIBRARY_DIR})
+# ltdl  ------------------------------------------------------------------------
+find_path(LTDL_INCLUDE_DIR ltdl.h)
+find_library(LTDL_LIBRARIES NAMES ltdl)
+list(APPEND OBORO_INCLUDE_DIRS  ${LTDL_INCLUDE_DIR})
+list(APPEND OBORO_LIBRARY_DIRS  ${LTDL_LIBRARY_DIR})
+list(APPEND OBORO_LIBRARIES     ${LTDL_LIBRARIES})
+list(APPEND OBORO_LIBRARIES     ${CMAKE_DL_LIBS})
+# Thread  ----------------------------------------------------------------------
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
+find_package(Threads)
+set(OBORO_THREAD_LIBS           ${CMAKE_THREAD_LIBS_INIT})
+list(APPEND OBORO_LIBRARIES     ${CMAKE_THREAD_LIBS_INIT})
+# ##############################################################################
+# dirs cleanup  ================================================================
+# ------------------------------------------------------------------------------
+list(REMOVE_DUPLICATES  OBORO_INCLUDE_DIRS)
+list(REMOVE_ITEM        OBORO_INCLUDE_DIRS "")
+# -----------------------------------------------------------------------------
+list(REMOVE_DUPLICATES  OBORO_LIBRARY_DIRS)
+list(REMOVE_ITEM        OBORO_LIBRARY_DIRS "")
+# ------------------------------------------------------------------------------
 list(REMOVE_DUPLICATES OBORO_LIBRARIES)
-list(REMOVE_ITEM OBORO_LIBRARIES "")
+list(REMOVE_ITEM        OBORO_LIBRARIES "")
 # ##############################################################################
 # extra  =======================================================================
 # ------------------------------------------------------------------------------
