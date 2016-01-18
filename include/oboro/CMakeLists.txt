@@ -42,25 +42,3 @@ install(FILES
 
   oboro.hh
   DESTINATION ${OBORO_INCLUDE_OBORO_DEST})
-# ==============================================================================
-# tests  -----------------------------------------------------------------------
-if(OBORO_ENABLE_TEST)
-  # ----------------------------------------------------------------------------
-  set(OBORO_INCLUDE_OBORO_TEST_EXE)
-  # splint  --------------------------------------------------------------------
-  if(SPLINT)
-    add_test(include_oboro-splint ${SPLINT_SH})
-    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE include_oboro-splint)
-  endif()
-  # cpplint  -------------------------------------------------------------------
-  if(PYTHON)
-    add_test(include_oboro-cpplint ${CPPLINT_SH})
-    list(APPEND OBORO_INCLUDE_OBORO_TEST_EXE include_oboro-cpplint)
-  endif()
-  # environment  ---------------------------------------------------------------
-  set(TEST_ENV_ "${TEST_ENV}")
-  list(APPEND TEST_ENV_ "SRCDIR=${CMAKE_CURRENT_SOURCE_DIR}")
-  list(APPEND TEST_ENV_ "BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
-  set_tests_properties(${OBORO_INCLUDE_OBORO_TEST_EXE}
-    PROPERTIES ENVIRONMENT "${TEST_ENV_}")
-endif()
