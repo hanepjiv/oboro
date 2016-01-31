@@ -29,8 +29,6 @@
 file(RELATIVE_PATH OBORO_INCLUDE_OBORO_DEST
   ${abs_top_srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
 install(FILES
-  call.h
-  declspec.h
   begin.h
 
   debug.h
@@ -40,5 +38,4 @@ install(FILES
   module.hpp
   function.hpp
 
-  oboro.hh
   DESTINATION ${OBORO_INCLUDE_OBORO_DEST})
