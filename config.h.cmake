@@ -4,7 +4,7 @@
  *
  *  config.h.in
  *
- *  Copyright 2015 hanepjiv
+ *  Copyright 2014 hanepjiv
  *
  *  @author hanepjiv <hagumo@gmail.com>
  *  @since 2015/08/08
