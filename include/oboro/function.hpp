@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/06/03
- *  @date 2015/11/28
+ *  @date 2016/02/11
  */
 
 
@@ -54,11 +54,8 @@ extern int oboroClosure(lua_State* L);
 namespace oboro {
 // =============================================================================
 int oboroClosure(lua_State* L) {
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wpedantic"
   lua_CFunction f =
       reinterpret_cast<lua_CFunction>(lua_touserdata(L, lua_upvalueindex(1)));
-# pragma GCC diagnostic pop
   ::std::printf("%p\n", f);
   return f(L);
 }

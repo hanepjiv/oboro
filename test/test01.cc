@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/24
- *  @date 2015/09/25
+ *  @date 2016/02/11
  */
 
 
@@ -187,10 +187,7 @@ int main(int argc, char* argv[]) {
   // ---------------------------------------------------------------------------
   { OBORO_TRACE("TEST01::06");
     {
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wpedantic"
       lua_pushlightuserdata(L, reinterpret_cast<void*>(&c_func));
-# pragma GCC diagnostic pop
       lua_pushcclosure(L, &oboro::oboroClosure, 1);
       lua_pushnumber(L, 1);
       lua_pushnumber(L, 2);
