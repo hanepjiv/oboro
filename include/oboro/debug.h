@@ -8,7 +8,7 @@
  *
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @since 2015/05/29
- *  @date 2016/01/10
+ *  @date 2016/02/15
  */
 
 
@@ -65,7 +65,7 @@
 #define OBORO_VERBOSITY_CRITICAL        OBORO_VERBOSITY_04
 /* -------------------------------------------------------------------------- */
 #define OBORO_VERBOSITY_ALL             OBORO_VERBOSITY_DEBUG
-#define OBORO_VERBOSITY_DEFAULT         OBORO_VERBOSITY_WARNING
+#define OBORO_VERBOSITY_DEFAULT         OBORO_VERBOSITY_INFO
 #define OBORO_VERBOSITY_QUIET           OBORO_VERBOSITY_CRITICAL
 /* ////////////////////////////////////////////////////////////////////////// */
 #ifdef OBORO_DEBUG
