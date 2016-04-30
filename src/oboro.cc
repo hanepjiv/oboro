@@ -11,7 +11,6 @@
  *  @date 2015/06/02
  */
 
-
 /* ########################################################################## */
 /*
   The MIT License (MIT)
@@ -37,13 +36,11 @@
   THE SOFTWARE.
 */
 
-
 #include <oboro/oboro.hh>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif  // HAVE_CONFIG_H
-
 
 namespace oboro {
 
