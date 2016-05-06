@@ -1,4 +1,4 @@
-/** -*- coding:utf-8; -*-
+/** -*- mode:c++; coding:utf-8-unix; -*-
  *  @file function.hpp
  *  @brief function.hpp
  *

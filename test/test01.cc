@@ -1,4 +1,4 @@
-/** -*- coding:utf-8; -*-
+/** -*- mode:c++; coding:utf-8-unix; -*-
  *  @file test01.cc
  *  @brief test01.cc
  *

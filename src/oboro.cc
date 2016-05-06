@@ -1,4 +1,4 @@
-/** -*- coding:utf-8; -*-
+/** -*- mode:c++; coding:utf-8-unix; -*-
  *  @file oboro.cc
  *  @brief oboro.cc
  *

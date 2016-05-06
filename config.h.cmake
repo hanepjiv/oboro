@@ -1,4 +1,4 @@
-/** -*- coding:utf-8; mode:c; -*-
+/** -*- mode:c; coding:utf-8-unix; -*-
  *  @file config.h.in
  *  @brief config.h.in
  *
