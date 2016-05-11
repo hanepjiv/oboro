@@ -6,11 +6,11 @@
  *
  *  Copyright 2014 hanepjiv
  *
- *  @author hanepjiv <hagumo@gmail.com>
+ *  @author hanepjiv <hanepjiv@gmail.com>
+ *  @copyright The MIT License (MIT)
  *  @since 2015/08/08
  *  @date 2015/09/25
  */
-
 
 #ifndef @OBORO_PACKAGE_UPPER@_CONFIG_H_
 #define @OBORO_PACKAGE_UPPER@_CONFIG_H_
