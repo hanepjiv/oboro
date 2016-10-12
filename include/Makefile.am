@@ -20,7 +20,7 @@ TESTS_ENVIRONMENT=\
 	TOP_SRCDIR=@top_srcdir@ \
 	SRCDIR=@srcdir@/oboro \
 	SPLINT="${SPLINT}" \
-	CPPLINT="${PYTHON2} @top_srcdir@/tools/et-cpplint/cpplint.py"
+	CPPLINT="${PYTHON} @top_srcdir@/tools/et-cpplint/cpplint.py"
 TESTS=
 # ------------------------------------------------------------------------------
 @top_builddir@/tools/et-splint/splint.sh: @top_srcdir@/tools/et-splint/splint.sh.in @top_builddir@/Makefile Makefile

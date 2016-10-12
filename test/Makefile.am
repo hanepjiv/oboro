@@ -21,7 +21,7 @@ TESTS_ENVIRONMENT=\
 	TOP_SRCDIR=@top_srcdir@ \
 	SRCDIR=@srcdir@ \
 	SPLINT="${SPLINT}" \
-	CPPLINT="${PYTHON2} @top_srcdir@/tools/et-cpplint/cpplint.py"
+	CPPLINT="${PYTHON} @top_srcdir@/tools/et-cpplint/cpplint.py"
 TESTS=
 # ------------------------------------------------------------------------------
 check_PROGRAMS+=test00
