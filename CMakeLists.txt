@@ -150,6 +150,8 @@ set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix "\${prefix}")
 set(libdir "\${exec_prefix}/lib")
 set(includedir "\${prefix}/include")
+set(datadir "\${exec_prefix}/share")
+set(mandir "\${datadir}/man")
 # -----------------------------------------------------------------------------
 set(OBORO_INCLUDE_DIRS "")
 list(APPEND OBORO_INCLUDE_DIRS  ${CMAKE_CURRENT_BINARY_DIR})
@@ -188,7 +190,7 @@ list(APPEND OBORO_LIBRARIES     ${CMAKE_THREAD_LIBS_INIT})
 # -----------------------------------------------------------------------------
 list(REMOVE_DUPLICATES  OBORO_INCLUDE_DIRS)
 list(REMOVE_ITEM        OBORO_INCLUDE_DIRS "")
-# ----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 list(REMOVE_DUPLICATES  OBORO_LIBRARY_DIRS)
 list(REMOVE_ITEM        OBORO_LIBRARY_DIRS "")
 # -----------------------------------------------------------------------------

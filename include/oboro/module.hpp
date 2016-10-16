@@ -9,7 +9,7 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/06/03
- *  @date 2015/09/25
+ *  @date 2016/10/16
  */
 
 #ifndef OBORO_MODULE_HPP_
@@ -28,15 +28,15 @@
 
 namespace oboro {
 
-// /////////////////////////////////////////////////////////////////////////////
-// =============================================================================
+// ////////////////////////////////////////////////////////////////////////////
+// ============================================================================
 class Module {
-  // ===========================================================================
-  // define  -------------------------------------------------------------------
+  // ==========================================================================
+  // define  ------------------------------------------------------------------
  public:
   enum class Flag : intptr_t { END, };
-  // ===========================================================================
-  // function  -----------------------------------------------------------------
+  // ==========================================================================
+  // function  ----------------------------------------------------------------
  public:
   inline ::std::string const &             getPACKAGE() const noexcept;
   inline unsigned                        getCURRENT() const noexcept;
@@ -48,8 +48,8 @@ class Module {
   template <typename T> inline Module&   def(const char*, T);
   template <typename T> inline Module&   def(T);
   inline Module&                         end();
-  // ===========================================================================
-  // variable  -----------------------------------------------------------------
+  // ==========================================================================
+  // variable  ----------------------------------------------------------------
  private:
   ::std::bitset<sizeof(::std::intptr_t)>     m_Flags;
   const unsigned                         m_CURRENT;
@@ -57,24 +57,26 @@ class Module {
   const unsigned                         m_REVISION;
   const ::std::string                      m_VERSION;
   const ::std::string                      m_PACKAGE;
-  // ===========================================================================
-  // constructor  --------------------------------------------------------------
+  // ==========================================================================
+  // constructor  -------------------------------------------------------------
  public:
   inline                 Module(const char* a_PACKAGE,
                                 unsigned a_CURRENT,
                                 unsigned a_AGE,
                                 unsigned a_REVISION);
   inline /* virtual */  ~Module() noexcept;
-  // ---------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
  private:
   explicit               Module(const Module&)                   = delete;
   explicit               Module(Module&&)                        = delete;
   Module&                operator =(const Module&) noexcept      = delete;
   Module&                operator =(Module&&) noexcept           = delete;
 };
-// =============================================================================
+// ============================================================================
 inline Module::Module(const char* a_PACKAGE,
-                      unsigned a_CURRENT, unsigned a_AGE, unsigned a_REVISION) :
+                      unsigned a_CURRENT,
+                      unsigned a_AGE,
+                      unsigned a_REVISION) :
     m_Flags(0),
     m_CURRENT(a_CURRENT),
     m_AGE(a_AGE),
@@ -86,36 +88,36 @@ inline Module::Module(const char* a_PACKAGE,
                      m_PACKAGE.c_str(), m_VERSION.c_str());
   OBORO_ASSERT(m_CURRENT > m_AGE, "ERROR!: invalid arguments.");
 }
-// =============================================================================
+// ============================================================================
 inline Module::~Module() noexcept {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::~Module()",
                      m_PACKAGE.c_str(), m_VERSION.c_str());
 }
-// =============================================================================
+// ============================================================================
 inline ::std::string const & Module::getPACKAGE() const noexcept {
   return m_PACKAGE;
 }
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 inline unsigned Module::getCURRENT() const noexcept {
   return m_CURRENT;
 }
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 inline unsigned Module::getAGE() const noexcept {
   return m_AGE;
 }
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 inline unsigned Module::getREVISION() const noexcept {
   return m_REVISION;
 }
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 inline unsigned Module::getMAJOR() const noexcept {
   return (m_CURRENT - m_AGE);
 }
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 inline ::std::string const & Module::getVERSION() const noexcept {
   return m_VERSION;
 }
-// =============================================================================
+// ============================================================================
 template <typename T>
 inline Module& Module::def(const char* a_Key, T a_Val) {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(\"%s\", ...)",
@@ -127,7 +129,7 @@ inline Module& Module::def(const char* a_Key, T a_Val) {
   }
   return *this;
 }
-// =============================================================================
+// ============================================================================
 template <typename T>
 inline Module& Module::def(T a_Val) {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::def<T>(...)",
@@ -139,7 +141,7 @@ inline Module& Module::def(T a_Val) {
   }
   return *this;
 }
-// =============================================================================
+// ============================================================================
 inline Module& Module::end() {
   OBORO_TRACEF_DEBUG("oboro::Module(%s, \"%s\")::end()",
                      m_PACKAGE.c_str(), m_VERSION.c_str());
@@ -154,4 +156,4 @@ inline Module& Module::end() {
 
 }  // namespace oboro
 
-#endif  /* OBORO_MODULE_HPP_ */
+#endif  // OBORO_MODULE_HPP_
