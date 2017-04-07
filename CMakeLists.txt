@@ -1,5 +1,5 @@
 # #############################################################################
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.7.2)
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/Modules/"
@@ -170,7 +170,7 @@ list(APPEND OBORO_LIBRARY_DIRS  ${LUA_LIBRARY_DIR})
 list(APPEND OBORO_LIBRARIES     ${LUA_LIBRARIES})
 # boost  ----------------------------------------------------------------------
 set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.56.0 REQUIRED COMPONENTS)
+find_package(Boost 1.62.0 REQUIRED COMPONENTS)
 list(APPEND OBORO_INCLUDE_DIRS  ${Boost_INCLUDE_DIR})
 list(APPEND OBORO_LIBRARY_DIRS  ${Boost_LIBRARY_DIR})
 # ltdl  -----------------------------------------------------------------------
