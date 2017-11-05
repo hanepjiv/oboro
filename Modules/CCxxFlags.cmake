@@ -71,7 +71,7 @@ if (CMAKE_COMPILER_IS_GNUCC OR
 endif()
 if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
   # Common  -------------------------------------------------------------------
-  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
+  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -rdynamic")
   # Debug  --------------------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_DEBUG "${COMPILER_C_CXX_FLAGS_DEBUG} -pg -ftrapv")
   set(COMPILER_EXE_LINKER_FLAGS_DEBUG "${COMPILER_EXE_LINKER_FLAGS_DEBUG} -pg")
@@ -87,7 +87,7 @@ if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")    # Clang  ======================
   # Common  -------------------------------------------------------------------
   set(COMPILER_C_FLAGS "${COMPILER_C_FLAGS} -fsanitize-undefined-trap-on-error")
-  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -Wl,-pie,-export-dynamic")
+  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -Wl,-export-dynamic")
   # Debug  --------------------------------------------------------------------
   #   pass
   # Release  ------------------------------------------------------------------
