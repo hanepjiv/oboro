@@ -83,7 +83,7 @@ OBORO_THREAD_LIBS=${PTHREAD_LIBS}
 OBORO_CPPFLAGS=
 OBORO_C_CXX_FLAGS="\
 	${OBORO_THREAD_CFLAGS} \
-	-pipe -fPIC -DPIC -D_REENTRANT -D_THREAD_SAFE \
+	-pipe -fPIC -DPIC -DPIE -D_REENTRANT -D_THREAD_SAFE \
 	-fno-asm -fno-builtin -fvisibility=hidden -fstrict-aliasing -pedantic \
 	-Werror -W -Wall -Wextra -Wstrict-aliasing=1 -Wformat=2 -Wundef \
 	-Wshadow -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings \

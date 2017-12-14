@@ -1,4 +1,11 @@
 # #############################################################################
+# PLATFOROM  ==================================================================
+if (EMSCRIPTEN)         # emscripten  -----------------------------------------
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+elseif (WIN32)          # win32  ----------------------------------------------
+  set(CMAKE_EXECUTABLE_SUFFIX ".exe")
+endif()
+# #############################################################################
 # COMPILER  ===================================================================
 # None ------------------------------------------------------------------------
 set(COMPILER_C_CXX_FLAGS "")
@@ -45,14 +52,21 @@ set(COMPILER_STATIC_LINKER_FLAGS_MINSIZEREL "")
 if (CMAKE_COMPILER_IS_GNUCC OR
     CMAKE_C_COMPILER_ID STREQUAL "Clang")       # GCC or Clang  ===============
   # Common  -------------------------------------------------------------------
-  if (UNIX)
+  if (WIN32)
+    set(COMPILER_LINKER_FLAGS "-static-libgcc -static-libstdc++ -mwindows -Wl,-no-undefined")
+    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} ${COMPILER_LINKER_FLAGS}")
+    set(COMPILER_MODULE_LINKER_FLAGS "${COMPILER_MODULE_LINKER_FLAGS} ${COMPILER_LINKER_FLAGS}")
+    set(COMPILER_SHARED_LINKER_FLAGS "${COMPILER_SHARED_LINKER_FLAGS} ${COMPILER_LINKER_FLAGS}")
+    set(COMPILER_STATIC_LINKER_FLAGS "${COMPILER_STATIC_LINKER_FLAGS} ${COMPILER_LINKER_FLAGS}")
+  elseif (UNIX)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE INTERNAL "")
+    set(COMPILER_C_CXX_FLAGS "${COMPILER_C_CXX_FLAGS} -DPIC -DPIE")
+    set(COMPILER_MODULE_LINKER_FLAGS "${COMPILER_MODULE_LINKER_FLAGS} -Wl,-z,defs")
     set(COMPILER_SHARED_LINKER_FLAGS "${COMPILER_SHARED_LINKER_FLAGS} -Wl,-z,defs")
-  elseif(MINGW)
-    set(COMPILER_SHARED_LINKER_FLAGS "${COMPILER_SHARED_LINKER_FLAGS} -Wl,-no-undefined")
   else()
     message(FATAL_ERROR "not yet supported.")
   endif()
-  set(COMPILER_C_CXX_FLAGS "${COMPILER_C_CXX_FLAGS} -pipe -D_REENTRANT -D_THREAD_SAFE -fvisibility=hidden -fstrict-aliasing -pedantic-errors -W -Wall -Wextra -Werror -Wstrict-aliasing=1 -Wformat=2 -Wundef -Wshadow -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wno-missing-field-initializers -Wno-sign-compare -Wconversion -Wfloat-equal -Wredundant-decls -Wno-unused-parameter -Wunused-result -Wmissing-declarations -Wsign-compare")
+  set(COMPILER_C_CXX_FLAGS "${COMPILER_C_CXX_FLAGS} -pipe -D_REENTRANT -D_THREAD_SAFE -fvisibility=hidden -fstrict-aliasing -pedantic-errors -W -Wall -Wextra -Wstrict-aliasing=1 -Wformat=2 -Wundef -Wshadow -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wno-missing-field-initializers -Wno-sign-compare -Wconversion -Wfloat-equal -Wredundant-decls -Wno-unused-parameter -Wunused-result -Wmissing-declarations -Wsign-compare")
   set(COMPILER_C_FLAGS "${COMPILER_C_FLAGS} -Wbad-function-cast -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wnested-externs -Wdeclaration-after-statement")
   set(COMPILER_CXX_FLAGS "${COMPILER_CXX_FLAGS} -fvisibility-inlines-hidden -fthreadsafe-statics -Weffc++ -Woverloaded-virtual -Wsign-promo -Wsynth")
   set(COMPILER_SHARED_LINKER_FLAGS "${COMPILER_SHARED_LINKER_FLAGS} -shared")
@@ -60,18 +74,20 @@ if (CMAKE_COMPILER_IS_GNUCC OR
   set(COMPILER_C_CXX_FLAGS_DEBUG "${COMPILER_C_CXX_FLAGS_DEBUG} -O0 -g -fverbose-asm")
   # Release  ------------------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_RELEASE "${COMPILER_C_CXX_FLAGS_RELEASE} -O3 -fomit-frame-pointer")
-  set(COMPILER_EXE_LINKER_FLAGS_RELEASE "${COMPILER_EXE_LINKER_FLAGS_FLAGS_RELEASE} -Wl,-S")
-  set(COMPILER_SHARED_LINKER_FLAGS_RELEASE "${COMPILER_SHARED_LINKER_FLAGS_FLAGS_RELEASE} -Wl,-S")
   # RelWithDebInfo  -----------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_RELWITHDEBINFO "${COMPILER_C_CXX_FLAGS_RELWITHDEBINFO} -O2 -g -fverbose-asm")
   # MinSizeRel  ---------------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_MINSIZEREL "${COMPILER_C_CXX_FLAGS_MINSIZEREL} -Os -fomit-frame-pointer")
-  set(COMPILER_EXE_LINKER_FLAGS_MINSIZEREL "${COMPILER_EXE_LINKER_FLAGS_MINSIZEREL} -Wl,-S")
-  set(COMPILER_SHARED_LINKER_FLAGS_MINSIZEREL "${COMPILER_SHARED_LINKER_FLAGS_MINSIZEREL} -Wl,-S")
 endif()
 if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
-  # Common  -------------------------------------------------------------------
-  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -rdynamic")
+  if(MINGW)
+    # pass
+  elseif (UNIX)
+    # Common  -----------------------------------------------------------------
+    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
+  else()
+    message(FATAL_ERROR "not yet supported.")
+  endif()
   # Debug  --------------------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_DEBUG "${COMPILER_C_CXX_FLAGS_DEBUG} -pg -ftrapv")
   set(COMPILER_EXE_LINKER_FLAGS_DEBUG "${COMPILER_EXE_LINKER_FLAGS_DEBUG} -pg")
@@ -87,7 +103,7 @@ if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")    # Clang  ======================
   # Common  -------------------------------------------------------------------
   set(COMPILER_C_FLAGS "${COMPILER_C_FLAGS} -fsanitize-undefined-trap-on-error")
-  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -Wl,-export-dynamic")
+  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -Wl,-pie,-export-dynamic")
   # Debug  --------------------------------------------------------------------
   #   pass
   # Release  ------------------------------------------------------------------

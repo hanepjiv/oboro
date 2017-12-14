@@ -17,7 +17,7 @@ link_directories(${OBORO_LIBRARY_DIRS})
 #  OUTPUT_NAME "oboro"
 #  VERSION ${OBORO_VERSION}
 #  SOVERSION ${OBORO_SOVERSION}
-#  COMPILE_FLAGS "-fPIC -DPIC -DPIE -DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
+#  COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
 #  )
 # -----------------------------------------------------------------------------
 #add_library(oboro-static STATIC ${OBORO_SOURCES})
@@ -26,7 +26,7 @@ link_directories(${OBORO_LIBRARY_DIRS})
 #set_target_properties(oboro-static
 #  PROPERTIES
 #  OUTPUT_NAME "oboro"
-#  COMPILE_FLAGS "-fPIC -DPIC -DPIE -DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
+#  COMPILE_FLAGS "-DOBORO_EXPORTS ${OBORO_CXX_FLAGS}"
 #  )
 # -----------------------------------------------------------------------------
 #install(TARGETS

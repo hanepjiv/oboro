@@ -26,7 +26,7 @@ if(OBORO_ENABLE_TEST)
   target_link_libraries(test00 ${OBORO_LIBRARIES})
   set_target_properties(test00
     PROPERTIES
-    COMPILE_FLAGS "-fPIE -DPIC -DPIE ${OBORO_CXX_FLAGS}"
+    COMPILE_FLAGS "${OBORO_CXX_FLAGS}"
     )
   add_test(test-test00 test00)
   list(APPEND OBORO_TEST_TEST_EXE test-test00)
@@ -38,7 +38,7 @@ if(OBORO_ENABLE_TEST)
   target_link_libraries(test01 ${OBORO_LIBRARIES})
   set_target_properties(test01
     PROPERTIES
-    COMPILE_FLAGS "-fPIE -DPIC -DPIE ${OBORO_CXX_FLAGS}"
+    COMPILE_FLAGS "${OBORO_CXX_FLAGS}"
     )
   add_test(test-test01 test01)
   list(APPEND OBORO_TEST_TEST_EXE test-test01)
