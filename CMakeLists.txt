@@ -193,33 +193,10 @@ if(OBORO_ENABLE_TEST)
   enable_testing()
   # checks  ===================================================================
   # splint  -------------------------------------------------------------------
-  find_program(SPLINT splint)
-  if(NOT SPLINT)
-    message(FATAL_ERROR "Test feature requires splint.")
-  endif()
-  message(STATUS "${SPLINT}")
-  configure_file(${abs_top_srcdir}/tools/et-splint/splint.sh.in
-    tools/et-splint/splint.sh @ONLY)
-  set(SPLINT_FLAGS "")
-  set(SPLINT_FLAGS "${SPLINT_FLAGS} -DOBORO_EXPORTS")
-  foreach(loop_var IN LISTS OBORO_INCLUDE_DIRS)
-    set(SPLINT_FLAGS "${SPLINT_FLAGS} -I ${loop_var}")
-  endforeach()
-  set(SPLINT_SH /bin/env sh ${CMAKE_CURRENT_BINARY_DIR}/tools/et-splint/splint.sh
-   )
+  set(ET_SPLINT_INCLUDE_DIRS "${OBORO_INCLUDE_DIRS}")
+  include(./tools/et-splint/Module.cmake)
   # cpplint  ------------------------------------------------------------------
-  find_program(PYTHON python2)
-  if(NOT PYTHON)
-    message(FATAL_ERROR "Test feature requires python.")
-  endif()
-  message(STATUS "${PYTHON}")
-  configure_file(${abs_top_srcdir}/tools/et-cpplint/cpplint.sh.in
-    tools/et-cpplint/cpplint.sh @ONLY)
-  set(CPPLINT "${PYTHON} ${abs_top_srcdir}/tools/et-cpplint/cpplint.py"
-   )
-  set(CPPLINT_FLAGS "")
-  set(CPPLINT_SH /bin/env sh ${CMAKE_CURRENT_BINARY_DIR}/tools/et-cpplint/cpplint.sh
-    )
+  include(./tools/et-cpplint/Module.cmake)
   # setting  ==================================================================
   # LD_LIBRARY_PATH  ----------------------------------------------------------
   set(LD_LIBRARY_PATH "")
