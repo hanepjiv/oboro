@@ -51,6 +51,14 @@ set(COMPILER_STATIC_LINKER_FLAGS_MINSIZEREL "")
 # compiler  ===================================================================
 if (CMAKE_COMPILER_IS_GNUCC OR
     CMAKE_C_COMPILER_ID STREQUAL "Clang")       # GCC or Clang  ===============
+  if(MINGW)
+    # pass
+  elseif (UNIX)
+    # Common  -----------------------------------------------------------------
+    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
+  else()
+    message(FATAL_ERROR "not yet supported.")
+  endif()
   # Common  -------------------------------------------------------------------
   if (WIN32)
     set(COMPILER_LINKER_FLAGS "-static-libgcc -static-libstdc++ -mwindows -Wl,-no-undefined")
@@ -80,14 +88,6 @@ if (CMAKE_COMPILER_IS_GNUCC OR
   set(COMPILER_C_CXX_FLAGS_MINSIZEREL "${COMPILER_C_CXX_FLAGS_MINSIZEREL} -Os -fomit-frame-pointer")
 endif()
 if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
-  if(MINGW)
-    # pass
-  elseif (UNIX)
-    # Common  -----------------------------------------------------------------
-    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
-  else()
-    message(FATAL_ERROR "not yet supported.")
-  endif()
   # Debug  --------------------------------------------------------------------
   set(COMPILER_C_CXX_FLAGS_DEBUG "${COMPILER_C_CXX_FLAGS_DEBUG} -pg -ftrapv")
   set(COMPILER_EXE_LINKER_FLAGS_DEBUG "${COMPILER_EXE_LINKER_FLAGS_DEBUG} -pg")
@@ -103,7 +103,6 @@ if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")    # Clang  ======================
   # Common  -------------------------------------------------------------------
   set(COMPILER_C_FLAGS "${COMPILER_C_FLAGS} -fsanitize-undefined-trap-on-error")
-  set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -Wl,-pie,-export-dynamic")
   # Debug  --------------------------------------------------------------------
   #   pass
   # Release  ------------------------------------------------------------------
