@@ -51,14 +51,6 @@ set(COMPILER_STATIC_LINKER_FLAGS_MINSIZEREL "")
 # compiler  ===================================================================
 if (CMAKE_COMPILER_IS_GNUCC OR
     CMAKE_C_COMPILER_ID STREQUAL "Clang")       # GCC or Clang  ===============
-  if(MINGW)
-    # pass
-  elseif (UNIX)
-    # Common  -----------------------------------------------------------------
-    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
-  else()
-    message(FATAL_ERROR "not yet supported.")
-  endif()
   # Common  -------------------------------------------------------------------
   if (WIN32)
     set(COMPILER_LINKER_FLAGS "-static-libgcc -static-libstdc++ -mwindows -Wl,-no-undefined")
@@ -69,6 +61,7 @@ if (CMAKE_COMPILER_IS_GNUCC OR
   elseif (UNIX)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE INTERNAL "")
     set(COMPILER_C_CXX_FLAGS "${COMPILER_C_CXX_FLAGS} -DPIC -DPIE")
+    set(COMPILER_EXE_LINKER_FLAGS "${COMPILER_EXE_LINKER_FLAGS} -pie -rdynamic")
     set(COMPILER_MODULE_LINKER_FLAGS "${COMPILER_MODULE_LINKER_FLAGS} -Wl,-z,defs")
     set(COMPILER_SHARED_LINKER_FLAGS "${COMPILER_SHARED_LINKER_FLAGS} -Wl,-z,defs")
   else()
