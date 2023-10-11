@@ -14,10 +14,13 @@ if(OBORO_ENABLE_TEST)
     list(APPEND OBORO_TEST_TEST_EXE test-splint)
   endif()
   # cpplint  ------------------------------------------------------------------
-  if(PYTHON)
-    add_test(test-cpplint ${CPPLINT_SH})
-    list(APPEND OBORO_TEST_TEST_EXE test-cpplint)
-  endif()
+  add_test(NAME test-cpplint COMMAND "${CPPLINT}"
+    ${CPPLINT_FLAGS}
+    "--repository=${CMAKE_SOURCE_DIR}"
+    "--root=test"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+  )
+  list(APPEND OBORO_TEST_TEST_EXE test-cpplint)
   # ---------------------------------------------------------------------------
   set(test00_SOURCES
     test00.cc

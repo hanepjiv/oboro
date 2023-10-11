@@ -9,10 +9,10 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/05/25
- *  @date 2015/06/02
+ *  @date 2023/10/10
  */
 
-#include <oboro/oboro.hh>
+#include <oboro/oboro.hpp>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

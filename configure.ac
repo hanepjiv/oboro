@@ -45,7 +45,7 @@ LT_INIT([static shared win32-dll dlopen])
 LTDL_INIT
 # -----------------------------------------------------------------------------
 # boost
-BOOST_VERSION=1.56.0
+BOOST_VERSION=1.86.0
 AX_BOOST_BASE([$BOOST_VERSION],
 	[],
 	[AC_MSG_ERROR([Boost C++ libraries not found!])])
@@ -99,7 +99,7 @@ OBORO_CFLAGS="\
 	"
 OBORO_CXXFLAGS="\
 	${OBORO_C_CXX_FLAGS} \
-	-std=c++11 \
+	-std=c++17 \
 	-fvisibility-inlines-hidden -fthreadsafe-statics \
 	-Weffc++ -Woverloaded-virtual -Wsign-promo -Wsynth \
 	"

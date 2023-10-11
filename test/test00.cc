@@ -9,7 +9,7 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/05/24
- *  @date 2015/09/25
+ *  @date 2023/10/09
  */
 
 #ifdef HAVE_CONFIG_H
@@ -19,11 +19,11 @@
 // #undef OBORO_VERBOSITY
 // #define OBORO_VERBOSITY OBORO_VERBOSITY_ALL
 
-#include <oboro/initializer.hpp>
-#include <oboro/oboro.hpp>
-
 #include <stdexcept>
 #include <cstdio>
+
+#include <oboro/initializer.hpp>
+#include <oboro/oboro.hpp>
 
 // ////////////////////////////////////////////////////////////////////////////
 // ============================================================================

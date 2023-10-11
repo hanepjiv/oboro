@@ -9,7 +9,7 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/08/08
- *  @date 2015/09/25
+ *  @date 2023/10/08
  */
 
 #ifndef @OBORO_PACKAGE_UPPER@_CONFIG_H_
@@ -24,10 +24,12 @@
 #define PACKAGE_VERSION         "@OBORO_VERSION@"
 #define VERSION                 "@OBORO_VERSION@"
 
-#if @Boost_FOUND@
-#  define HAVE_BOOST 1
-#else
-#  undef HAVE_BOOST
-#endif
+#define TRUE 1
+#  if @Boost_FOUND@
+#    define HAVE_BOOST 1
+#  else
+#    undef HAVE_BOOST
+#  endif
+#undef TRUE
 
 #endif  /* @OBORO_PACKAGE_UPPER@_CONFIG_H_ */

@@ -1,5 +1,5 @@
 # #############################################################################
-cmake_minimum_required(VERSION 3.9.6)
+cmake_minimum_required(VERSION 3.26.5)
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/Modules/"
@@ -55,9 +55,9 @@ set(OBORO_CXX_FLAGS_MINSIZEREL          "")
 # -----------------------------------------------------------------------------
 if (CMAKE_COMPILER_IS_GNUCC OR
     CMAKE_C_COMPILER_ID STREQUAL "Clang")       # GCC or Clang  ===============
-  set(OBORO_C_CXX_FLAGS                 "${OBORO_C_CXX_FLAGS} -fno-asm -fno-builtin")
-  set(OBORO_C_FLAGS                     "${OBORO_C_FLAGS} -std=c99")
-  set(OBORO_CXX_FLAGS                   "${OBORO_CXX_FLAGS} -std=c++14 -fexceptions -frtti")
+  set(OBORO_C_CXX_FLAGS "${OBORO_C_CXX_FLAGS} -fno-asm -fno-builtin")
+  set(OBORO_C_FLAGS     "${OBORO_C_FLAGS} -std=c99")
+  set(OBORO_CXX_FLAGS   "${OBORO_CXX_FLAGS} -std=c++17 -fexceptions -frtti")
 endif()
 # -----------------------------------------------------------------------------
 if (CMAKE_COMPILER_IS_GNUCC)                    # GCC  ========================
@@ -132,13 +132,13 @@ set(OBORO_LIBRARIES "")
 # #############################################################################
 # libraries  ==================================================================
 # lua -------------------------------------------------------------------------
-find_package(Lua51 REQUIRED)
-list(APPEND OBORO_INCLUDE_DIRS  ${LUA_INCLUDE_DIR})
-list(APPEND OBORO_LIBRARY_DIRS  ${LUA_LIBRARY_DIR})
-list(APPEND OBORO_LIBRARIES     ${LUA_LIBRARIES})
+find_package(Lua REQUIRED)
+list(APPEND OBORO_INCLUDE_DIRS ${LUA_INCLUDE_DIR})
+list(APPEND OBORO_LIBRARY_DIRS ${LUA_LIBRARY_DIR})
+list(APPEND OBORO_LIBRARIES    ${LUA_LIBRARIES})
 # boost  ----------------------------------------------------------------------
 set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.63.0 REQUIRED COMPONENTS)
+find_package(Boost 1.82.0 REQUIRED COMPONENTS)
 list(APPEND OBORO_INCLUDE_DIRS  ${Boost_INCLUDE_DIR})
 list(APPEND OBORO_LIBRARY_DIRS  ${Boost_LIBRARY_DIR})
 # ltdl  -----------------------------------------------------------------------
@@ -193,10 +193,23 @@ if(OBORO_ENABLE_TEST)
   enable_testing()
   # checks  ===================================================================
   # splint  -------------------------------------------------------------------
-  set(ET_SPLINT_INCLUDE_DIRS "${OBORO_INCLUDE_DIRS}")
-  include(./tools/et-splint/Module.cmake)
+  set(SPLINT_FLAGS
+    "+matchanyintegral"
+    "-noeffect"
+  )
+  set(SPLINT_INCLUDE_DIRS ${OBORO_INCLUDE_DIRS})
+  include(SetSplint)
   # cpplint  ------------------------------------------------------------------
-  include(./tools/et-cpplint/Module.cmake)
+  find_program(CPPLINT cpplint)
+  if(NOT CPPLINT)
+    message(FATAL_ERROR "Test feature requires cpplint.")
+  endif()
+  set(CPPLINT_FLAGS
+    "--filter=+build/c++17"
+    "--recursive"
+    "--extensions='c,cc,cpp'"
+    "--headers='h,hh'"
+  )
   # setting  ==================================================================
   # LD_LIBRARY_PATH  ----------------------------------------------------------
   set(LD_LIBRARY_PATH "")
@@ -209,7 +222,6 @@ if(OBORO_ENABLE_TEST)
   list(APPEND TEST_ENV "TOP_SRCDIR=${abs_top_srcdir}")
   list(APPEND TEST_ENV "TOP_BUILDDIR=${CMAKE_CURRENT_BINARY_DIR}")
   list(APPEND TEST_ENV "SPLINT=${SPLINT} ${SPLINT_FLAGS} -DOBORO_EXPORTS")
-  list(APPEND TEST_ENV "CPPLINT=${CPPLINT} ${CPPLINT_FLAGS}")
 endif()
 # #############################################################################
 # subdirectory  ===============================================================

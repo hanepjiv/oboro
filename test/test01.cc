@@ -9,7 +9,7 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/05/24
- *  @date 2016/02/11
+ *  @date 2023/10/09
  */
 
 #ifdef HAVE_CONFIG_H
@@ -19,13 +19,13 @@
 #undef OBORO_VERBOSITY
 #define OBORO_VERBOSITY OBORO_VERBOSITY_INFO
 
+#include <stdexcept>
+#include <cstring>
+
 #include <oboro/initializer.hpp>
 #include <oboro/oboro.hpp>
 #include <oboro/function.hpp>
 #include <oboro/module.hpp>
-
-#include <stdexcept>
-#include <cstring>
 
 // ////////////////////////////////////////////////////////////////////////////
 // ============================================================================
@@ -33,8 +33,8 @@
 extern "C" {
 #endif  // __cplusplus
   // ==========================================================================
-  static int c_func(lua_State* L) noexcept;
-  static int c_index(lua_State* L) noexcept;
+  static int c_func(lua_State* L);
+  static int c_index(lua_State* L);
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
@@ -44,7 +44,7 @@ extern "C" {
 extern "C" {
 #endif  // __cplusplus
   // ==========================================================================
-  int c_func(lua_State* L) noexcept {
+  int c_func(lua_State* L) {
     int ret = static_cast<int>(lua_tonumber(L, 1)) +
               static_cast<int>(lua_tonumber(L, 2));
     lua_settop(L, 0);
@@ -52,7 +52,7 @@ extern "C" {
     return 1;
   }
   // ==========================================================================
-  int c_index(lua_State* L) noexcept {
+  int c_index(lua_State* L) {
     ::std::printf("c_index\n");
     oboro::printStack(L);
     int** ppi = static_cast<int**>(lua_touserdata(L, 1));

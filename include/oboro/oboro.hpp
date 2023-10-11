@@ -9,7 +9,7 @@
  *  @author hanepjiv <hanepjiv@gmail.com>
  *  @copyright The MIT License (MIT)
  *  @since 2015/05/29
- *  @date 2016/10/16
+ *  @date 2023/10/11
  */
 
 #ifndef OBORO_OBORO_HPP_
@@ -30,8 +30,11 @@
 namespace oboro {
 
 // ============================================================================
-using NIL        = struct {};
-using TABLE      = struct {};
+struct NIL_t { explicit NIL_t() = default; };
+inline constexpr NIL_t NIL {};
+// ----------------------------------------------------------------------------
+struct TABLE_t { explicit TABLE_t() = default; };
+inline constexpr TABLE_t TABLE {};
 // ============================================================================
 inline void     print(lua_State* L, int a_Index) noexcept;
 inline void     printStack(lua_State* L) noexcept;
@@ -187,26 +190,26 @@ inline bool     is<const char*, true>(lua_State* L, int a_Index) {
 }
 // ----------------------------------------------------------------------------
 template <>
-inline bool     is<TABLE, false>(lua_State* L, int a_Index) {
-  OBORO_TRACE_DEBUG("oboro::is<TABLE, false>");
-  OBORO_ASSERT(L, "ERROR! oboro::is<TABLE, false>: invalid lua_State");
+inline bool     is<TABLE_t, false>(lua_State* L, int a_Index) {
+  OBORO_TRACE_DEBUG("oboro::is<TABLE_t, false>");
+  OBORO_ASSERT(L, "ERROR! oboro::is<TABLE_t, false>: invalid lua_State");
   return lua_istable(L, a_Index);
 }
 // ----------------------------------------------------------------------------
 template <>
-inline bool     is<TABLE, true>(lua_State* L, int a_Index) {
-  OBORO_TRACE_DEBUG("oboro::is<TABLE, true>");
-  OBORO_ASSERT(L, "ERROR! oboro::is<TABLE, true>: invalid lua_State");
-  if (!is<TABLE, false>(L, a_Index)) {
-    throw ::std::runtime_error("ERROR!: oboro::is<TABLE, true>");
+inline bool     is<TABLE_t, true>(lua_State* L, int a_Index) {
+  OBORO_TRACE_DEBUG("oboro::is<TABLE_t, true>");
+  OBORO_ASSERT(L, "ERROR! oboro::is<TABLE_t, true>: invalid lua_State");
+  if (!is<TABLE_t, false>(L, a_Index)) {
+    throw ::std::runtime_error("ERROR!: oboro::is<TABLE_t, true>");
   }
   return true;
 }
 // ============================================================================
 template <>
-inline void     push(lua_State* L, NIL /* a_nil */) noexcept {
-  OBORO_TRACE_DEBUG("oboro::push<NIL>");
-  OBORO_ASSERT(L, "ERROR! oboro::push<NIL>: invalid lua_State");
+inline void     push(lua_State* L, NIL_t /* a_nil */) noexcept {
+  OBORO_TRACE_DEBUG("oboro::push<NIL_t>");
+  OBORO_ASSERT(L, "ERROR! oboro::push<NIL_t>: invalid lua_State");
   lua_pushnil(L);
 }
 // ----------------------------------------------------------------------------
@@ -419,11 +422,11 @@ inline const char* get(lua_State* L, int i) {
 }
 // ----------------------------------------------------------------------------
 template <>
-inline TABLE get(lua_State* L, int i) {
-  OBORO_TRACE_DEBUG("oboro::get<TABLE>");
-  OBORO_ASSERT(L, "ERROR! oboro::get<TABLE>: invalid lua_State");
-  is<TABLE>(L, i);
-  return TABLE();
+inline TABLE_t get(lua_State* L, int i) {
+  OBORO_TRACE_DEBUG("oboro::get<TABLE_t>");
+  OBORO_ASSERT(L, "ERROR! oboro::get<TABLE_t>: invalid lua_State");
+  is<TABLE_t>(L, i);
+  return TABLE;
 }
 // ============================================================================
 template <class T, bool POP> struct gettableImpl {
@@ -433,7 +436,7 @@ template <class T, bool POP> struct gettableImpl {
 // ----------------------------------------------------------------------------
 template <class T> struct gettableImpl<T, false> {
   inline T helper(lua_State* L, int a_TblIdx) {
-    is<TABLE>(L, a_TblIdx);
+    is<TABLE_t>(L, a_TblIdx);
     lua_gettable(L,  a_TblIdx);
     return get<T>(L, -1);
   }
@@ -474,7 +477,7 @@ inline T         gettable(lua_State* L, int a_TblIdx, int a_Index) {
 // ----------------------------------------------------------------------------
 // UNDEFINED
 template <>
-inline TABLE gettable<TABLE, true>(lua_State* L, int a_TblIdx, int a_Index);
+inline TABLE_t gettable<TABLE_t, true>(lua_State* L, int a_TblIdx, int a_Index);
 // ----------------------------------------------------------------------------
 template <class T, bool POP>
 inline T         gettable(lua_State* L, int a_TblIdx, const char* a_Key) {
@@ -494,8 +497,8 @@ inline T         gettable(lua_State* L, int a_TblIdx, const char* a_Key) {
 // ----------------------------------------------------------------------------
 // UNDEFINED
 template <>
-inline TABLE gettable<TABLE, true>(lua_State* L,
-                                   int a_TblIdx, const char* a_Key);
+inline TABLE_t gettable<TABLE_t, true>(lua_State* L,
+                                       int a_TblIdx, const char* a_Key);
 
 }  // namespace oboro
 
